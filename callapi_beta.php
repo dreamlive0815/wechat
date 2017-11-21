@@ -1,6 +1,6 @@
 <?php
 
-$config = require( 'config.php' );
+$config = require( 'config_beta.php' );
 
 include $baseDir . '/vendor/autoload.php';
 
@@ -9,12 +9,12 @@ use EasyWeChat\Message\Text;
 
 $app = new Application( $config );
 $staff = $app->staff;
-$openid = 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro';
+$openid = 'oZy0Mw58RMSmyys0WR9xRp-y5v0U';
 $message = new Text( [ 'content' => 'Hello world!' ] );
 try
 {
     $result = $staff->message( $message )->to( $openid )->send();
-    var_dump( $result );
+    print_r( $result );
 }
 catch(\Exception $ex)
 {

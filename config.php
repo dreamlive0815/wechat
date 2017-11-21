@@ -19,6 +19,7 @@ return [
 
     'guzzle' => [
         'timeout' => 3.0,
+        'verify' => false,
     ]
 ];
 
