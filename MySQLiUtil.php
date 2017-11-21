@@ -95,7 +95,6 @@ class MySQLiUtil
     //对特殊字符进行转义,防止SQL注入
     function filter( $str )
     {
-        if( !is_string( $str ) ) return '';
         $str = stripslashes( $str );
         $str = $this->con->real_escape_string( $str );
         return $str;
@@ -397,7 +396,8 @@ class MySQLiQueryUtil
             $where = [];
             self::$cur = &$where;
         }
-        if( $args[0] instanceof Closure )
+        $arg1 = $args[0];
+        if( gettype( $arg1 ) == 'object' && get_class( $arg1 ) == 'Closure' )
         {
             if( self::$cur ) self::$cur[] = Raw( $this->orSwitch ? 'or' : 'and' );
             $old = &self::$cur;
