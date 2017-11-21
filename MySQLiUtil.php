@@ -1,6 +1,22 @@
 <?php
 namespace Util;
 
+class MySQLiUtilPool
+{
+    static $utils = [];
+
+    static function getInstance( $host, $username, $password, $dbname = null )
+    {
+        foreach( self::$utils as $util )
+        {
+            if( $host == $util->host && $username == $util->username && $password == $util->password && $dbname == $util->dbname ) return $util;
+        }
+        $util = new MySQLiUtil( $host, $username, $password, $dbname );
+        self::$utils[] = $util;
+        return $util;
+    }
+}
+
 class MySQLiUtil
 {
     static $throw = true;           //是否抛出错误
@@ -69,13 +85,11 @@ class MySQLiUtil
         $con->query( 'set names utf8' );      //编码UTF-8
     }
 
-    function query( $v = null )
+    function getQuery( $v = null )
     {
-        /*
-        $q = new Query( $this );
+        $q = new MySQLiQueryUtil( $this );
         if( $v ) $q->table( $v );
         return $q;
-        */
     }
     
     //对特殊字符进行转义,防止SQL注入
@@ -186,12 +200,13 @@ class MySQLiUtil
         $this->close();
     }
 }
-/*
-class Query
+
+
+class MySQLiQueryUtil
 {
     static $cur;
 
-    public $DB;
+    public $util;
     public $sql;
     public $select;
     public $table;
@@ -203,15 +218,28 @@ class Query
     public $offset;
     public $limit;
 
-    function __construct(DB &$DB)
+    function __construct()
     {
-        $this->DB = $DB;
+        $args = func_get_args();
+        $cnt = func_num_args();
+        if( !$args ) throw new MySQLiQueryUtilException( '构造器:参数不合法' );
+        if( $args[0] instanceof MySQLiUtil )
+        {
+            $this->util = $args[0];
+            return;
+        }
+        if( $cnt == 3 ) $args[] = null;
+        if( count( $args ) != 4 ) throw new MySQLiQueryUtilException( '构造器:参数不合法' );
+        $this->util = MySQLiUtilPool::getInstance( $args[0], $args[1], $args[2], $args[3] );
     }
 
+    /* 设置 select 部分
+    select( 'f1' )  select( [ [ 'f1', 'f1alias' ], 'f2' ] ) select( [ 't1' => [ [ 'f1', 'f1alias' ], 'f2' ], 't2' => 'f2' ] )
+    */
     function select( $v )
     {
         if( is_string( $v ) ) $v = [ $v ];
-        if( !is_array( $v ) ) throw new EX( 'DB_Query', 1, 'select:参数不合法' );
+        if( !is_array( $v ) ) throw new MySQLiQueryUtilException( 'select:参数不合法' );
         $this->select = $v;
         if( $v )
         {
@@ -224,6 +252,7 @@ class Query
         return $this;
     }
 
+    //生成 select 部分sql
     function _select()
     {
         $sel = $this->select;
@@ -245,7 +274,7 @@ class Query
                         $a[] = "{$k}.{$vv}";
                         continue;
                     }
-                    if( !is_string( $vv[1] ) ) new EX( 'DB_Query', 1, 'select:参数不合法' );
+                    if( !is_string( $vv[1] ) ) throw new MySQLiQueryUtilException( '_select:参数不合法' );
                     $a[] = "{$k}.{$vv[0]} as {$vv[1]}";
                 }
 
@@ -260,13 +289,16 @@ class Query
                     $a[] = $v;
                     continue;
                 }
-                if( !is_string( $v[1] ) ) new EX( 'DB_Query', 1, 'select:参数不合法' );
+                if( !is_string( $v[1] ) ) throw new MySQLiQueryUtilException( '_select:参数不合法' );
                 $a[] = "{$v[0]} as {$v[1]}";
             }
         }
         return 'select ' . implode( ',', $a );
     }
 
+    /*设置 from 或者 update 的表名部分
+    table( 't1' )  table( [ 't1', 't2' ] ) 
+    */
     function table( $v )
     {
         $t = &$this->table; $t = [];
@@ -280,7 +312,24 @@ class Query
         }
         return $this;
     }
+    
+    function _from()
+    {
+        $t = $this->table;
+        if( !$t ) throw new MySQLiQueryUtilException( '_from:至少指定一张表' );
+        return ' from ' . implode( ',', $t );
+    }
 
+    function _update()
+    {
+        $t = $this->table;
+        if( !$t ) throw new MySQLiQueryUtilException( '_update:至少指定一张表' );
+        return 'update ' . implode( ',', $t );
+    }
+
+    /*设置 insert 的字段名部分
+    field( 'f1' )  field( [ 'f1', 'f2' ] ) 
+    */
     function field( $v )
     {
         $f = &$this->field; $f = [];
@@ -295,58 +344,52 @@ class Query
         return $this;
     }
 
-    function _from()
-    {
-        $t = $this->table;
-        if( !$t ) throw new EX( 'DB_Query', 1, '至少指定一张表' );
-        return ' from ' . implode( ',', $t );
-    }
-
-    function _update()
-    {
-        $t = $this->table;
-        if( !$t ) throw new EX( 'DB_Query', 1, '至少指定一张表' );
-        return 'update ' . implode( ',', $t );
-    }
-
     function _insert()
     {
         $tbl = $this->table; $fld = $this->field;
-        if( !isset( $tbl[0] ) ) throw new EX( 'DB_Query', 1, '请指定需要插入数据的表' );
+        if( !isset( $tbl[0] ) ) throw new MySQLiQueryUtilException( '_insert:请指定需要插入数据的表' );
         $fs = []; if( $fld ) foreach( $fld as $i ) $fs[] = "`{$i}`";
         $f_str = ''; if( $fs ) $f_str = '(' . implode( ',', $fs ) . ')';
         return "insert into `{$tbl[0]}`" . $f_str;
     }
 
+    /*设置update set部分
+    set( [ 'f1' => 'v1', 'f2' => 'v2', 'f3' => Raw( 'f3 + 1' ) ] )
+    */
     function set( array $v )
     {
         $this->set = $v;
         return $this;
     }
 
+    // 自动过滤 value支持rawsql
     function _set()
     {
         $set = $this->set; $a = [];
         foreach( $set as $k => $v )
         {
-            if( $v instanceof RawText )
+            if( $v instanceof UtilRaw )
             {
                 $a[] = "{$k} = " . $v->text;
             }
             else
             {
-                $v = $this->DB->filter( $v );
+                $v = $this->util->filter( $v );
                 $a[] = "{$k} = '{$v}'";
             }
         }
-        if( !$a ) throw new EX( 'DB_Query', 1, '至少更新一个字段' );
+        if( !$a ) throw new MySQLiQueryUtilException( '_set:至少更新一个字段' );
         return ' set ' . implode( ',', $a );
     }
 
+    /*
+    设置where部分
+    where( 'f', 'v' ) where( 'f', 'operator', 'v' ) where( function( $query ) { $query->where...; } )
+    */
     function where()
     {
         $a_c = func_num_args();
-        if( !$a_c ) throw new EX( 'DB_Query', 1, '至少传递一个参数' );
+        if( !$a_c ) throw new MySQLiQueryUtilException( 'where:至少传递一个参数' );
         $args = func_get_args();
         $where = &$this->where;
         if( !$where )
@@ -356,7 +399,7 @@ class Query
         }
         if( $args[0] instanceof Closure )
         {
-            if( self::$cur ) self::$cur[] = DB_Raw( $this->orSwitch ? 'or' : 'and' );
+            if( self::$cur ) self::$cur[] = Raw( $this->orSwitch ? 'or' : 'and' );
             $old = &self::$cur;
             self::$cur[] = [];
             self::$cur =  &self::$cur[ count( self::$cur ) - 1 ];
@@ -364,9 +407,9 @@ class Query
             self::$cur = &$old;
             return $this;
         }
-        if( $args[0] instanceof RawText )
+        if( $args[0] instanceof UtilRaw )
         {
-            if( self::$cur ) self::$cur[] = DB_Raw( $this->orSwitch ? 'or' : 'and' );
+            if( self::$cur ) self::$cur[] = Raw( $this->orSwitch ? 'or' : 'and' );
             self::$cur[] = $args[0];
             return $this;
         }
@@ -381,20 +424,21 @@ class Query
         {
             $val = $args[1];
         }
-        if( $val instanceof RawText )
+        if( $val instanceof UtilRaw )
         {
             $val = $val->text;
         }
         else
         {
-            $val = $this->DB->filter( $val );
+            $val = $this->util->filter( $val );
             $val = "'{$val}'";
         }
-        if( self::$cur ) self::$cur[] = DB_Raw( $this->orSwitch ? 'or' : 'and' );
+        if( self::$cur ) self::$cur[] = Raw( $this->orSwitch ? 'or' : 'and' );
         self::$cur[] = [ 'col' => $col, 'ope' => $ope, 'val' => $val ];
         return $this;
     }
 
+    //用法和where相同 最后生成时前面跟的是or而不是and
     function orWhere()
     {
         $args = func_get_args();
@@ -404,6 +448,7 @@ class Query
         return $this;
     }
 
+    //自动过滤(在where里)
     function _where()
     {
         $w = &$this->where;
@@ -411,13 +456,14 @@ class Query
         return ' where ' . $this->__where( $w );
     }
 
+    //用于递归
     private function __where( &$a, $f = 0 )
     {
         $s = '';
         foreach( $a as &$v )
         {
             if( $s ) $s .= ' ';
-            if( $v instanceof RawText )
+            if( $v instanceof UtilRaw )
             {
                 $s .= $v->text;
             }
@@ -437,6 +483,10 @@ class Query
         return $s;
     }
 
+    /*
+    order( 'f1' ) order( [ 'f1', [ 'f2', 0 ] ] )
+    0表示降序
+    */
     function order( $v )
     {
         if( is_string( $v ) ) $v = [ $v ];
@@ -463,6 +513,9 @@ class Query
         return ' order by ' . implode( ',', $a );
     }
 
+    /*
+    offset( 10 )
+    */
     function offset( $v )
     {
         $v = (int) $v;
@@ -471,6 +524,9 @@ class Query
         return $this;
     }
 
+    /*
+    offset( 20 )
+    */
     function limit( $v )
     {
         $v = (int) $v;
@@ -491,20 +547,24 @@ class Query
         return $s;
     }
 
+    /*
+    生成insert sql语句  自动过滤
+    _insert_( 'v1' )  _insert_( [ 'v1', 'v2' ] )  _insert_( [ [ 'v1', 'v2' ], [ 'v3', v4' ] ] )
+    */
     function _insert_( $v, array $override = [] )
     {
         if( is_string( $v ) ) $v = [ $v ];
-        if( !$v || !is_array( $v ) ) new EX( 'DB_Query', 1, 'insert:参数不合法' );
+        if( !$v || !is_array( $v ) ) throw new MySQLiQueryUtilException( '_insert_:参数不合法' );
         if( !is_array( reset( $v ) ) ) $v = [ $v ];
         $f_c = 0; if( $this->field ) $f_c = count( $this->field );
         $a = [];
         foreach( $v as $i )
         {
             $aa = [];
-            if( $f_c && $f_c != count( $i ) ) throw new EX( 'DB_Query', 1, '字段数和插入值列数不相符' );
+            if( $f_c && $f_c != count( $i ) ) throw new MySQLiQueryUtilException( '_insert_:字段数和插入值列数不相符' );
             foreach( $i as $ii )
             {
-                $ii = $this->DB->filter( $ii );
+                $ii = $this->util->filter( $ii );
                 $aa[] = "'{$ii}'";
             }
             $a[] = '(' . implode( ',', $aa ) . ')'; 
@@ -513,13 +573,13 @@ class Query
         $a = [];
         foreach( $override as $k => $v )
         {
-            if( $v instanceof RawText )
+            if( $v instanceof UtilRaw )
             {
                 $a[] = "{$k} = " . $v->text;
             }
             else
             {
-                $v = $this->DB->filter( $v );
+                $v = $this->util->filter( $v );
                 $a[] = "{$k} = '{$v}'";
             }
         }
@@ -530,7 +590,7 @@ class Query
 
     function insert( $v, array $override = [] )
     {
-        return $this->DB->exec( $this->_insert_( $v, $override ) );
+        return $this->util->exec( $this->_insert_( $v, $override ) );
     }
 
     function _delete()
@@ -542,7 +602,7 @@ class Query
 
     function delete()
     {
-        return $this->DB->exec( $this->_delete() );
+        return $this->util->exec( $this->_delete() );
     }
 
     function _get()
@@ -554,8 +614,8 @@ class Query
 
     function get()
     {
-        $a = $this->DB->exec( $this->_get() );
-        return DB_Result( $a );
+        $a = $this->util->exec( $this->_get() );
+        return Result( $a );
     }
 
     function count()
@@ -572,7 +632,7 @@ class Query
 
     function update()
     {
-        return $this->DB->exec( $this->_update_() );
+        return $this->util->exec( $this->_update_() );
     }
 
     function __destruct()
@@ -580,12 +640,13 @@ class Query
     }
 }
 
-function DB_Result( $a )
+
+function Result( $a )
 {
-    return new Result( $a );
+    return new UtilResult( $a );
 }
 
-class Result
+class UtilResult
 {
     public $a;
 
@@ -608,13 +669,12 @@ class Result
     }
 }
 
-
-function DB_Raw( $text )
+function Raw( $text )
 {
-    return new RawText( $text );
+    return new UtilRaw( $text );
 }
 
-class RawText
+class UtilRaw
 {
     public $text;
 
@@ -622,12 +682,24 @@ class RawText
     {
         $this->text = $text;
     }
+
+    function __toString()
+    {
+        return $this->text;
+    }
 }
-*/
 
 class MySQLiUtilException extends \Exception
 {
 	function __construct( $errorMsg, $errorCode = 10002 )
+    {
+        parent::__construct( $errorMsg, $errorCode );
+    }
+}
+
+class MySQLiQueryUtilException extends \Exception
+{
+	function __construct( $errorMsg, $errorCode = 10001 )
     {
         parent::__construct( $errorMsg, $errorCode );
     }
