@@ -2,7 +2,7 @@
 
 require( 'CurlUtil.php' );
 
-use Api\CurlUtil;
+use Util\CurlUtil;
 
 $url = 'http://localhost/wechat/index.php';
 
