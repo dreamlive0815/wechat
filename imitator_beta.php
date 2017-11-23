@@ -1,6 +1,6 @@
 <?php
 
-require( 'CurlUtil.php' );
+require( 'autoload.php' );
 
 use Util\CurlUtil;
 
