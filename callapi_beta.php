@@ -11,6 +11,9 @@ $app = new Application( $config );
 $staff = $app->staff;
 $openid = 'oZy0Mw58RMSmyys0WR9xRp-y5v0U';
 $message = new Text( [ 'content' => 'Hello world!' ] );
+$server = $app->server;
+print_r( $server );
+/*
 try
 {
     $result = $staff->message( $message )->to( $openid )->send();
@@ -20,3 +23,4 @@ catch(\Exception $ex)
 {
     print_r( $ex );
 }
+*/

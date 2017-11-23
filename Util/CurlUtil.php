@@ -1,5 +1,8 @@
 <?php
+
 namespace Util;
+
+use Util\Exceptions\CurlUtilException;
 
 class CurlUtil
 {
@@ -228,11 +231,4 @@ class CurlUtil
 
 }
 
-class CurlUtilException extends \Exception
-{
-	function __construct( $errorMsg, $errorCode = 10002 )
-    {
-        parent::__construct( $errorMsg, $errorCode );
-    }
-}
 ?>
