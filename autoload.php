@@ -11,7 +11,6 @@ class AutoLoadException extends Exception
 spl_autoload_register( function( $class ) {
     $currentDir = realpath( __DIR__ );
     $filename = $currentDir . '/' . $class . '.php';
-    echo $filename . "\n";
     if( !is_file( $filename ) || !is_readable( $filename ) )
     {
         throw new AutoLoadException( '无法加载类:' . $class );
