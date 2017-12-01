@@ -1,8 +1,8 @@
 <?php
 
-namespace Util;
+namespace Util\MySQLi;
 
-use Util\MySQLiUtil;
+use Util\MySQLi\MySQLiUtil;
 
 class MySQLiUtilPool
 {

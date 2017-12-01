@@ -1,8 +1,8 @@
 <?php
 
-namespace Util;
+namespace Util\MySQLi;
 
-use Util\MySQLiQueryUtil;
+use Util\MySQLi\MySQLiQueryUtil;
 use Util\Exceptions\MySQLiUtilException;
 
 class MySQLiUtil
