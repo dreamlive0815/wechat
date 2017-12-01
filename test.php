@@ -1,21 +1,26 @@
 <?php
 
 require( 'autoload.php' );
-
+/*
 $config = require( 'config_beta.php' );
-
 require( $baseDir . '/vendor/autoload.php' );
-
 use EasyWeChat\Foundation\Application;
 use EasyWeChat\Message\Text;
-
-use Util\MySQLi\MySQLiUtil;
-use Util\MySQLi\MySQLiUtilPool;
-use Util\MySQLi\MySQLiQueryUtil;
+*/
+use Util\Log\LogUtil;
 
 try
 {
 
+$logger = LogUtil::create( 'FS', __DIR__, '1.txt' );
+
+print_r( $logger );
+LogUtil::addInstance( 'EX', $logger );
+$l = LogUtil::getInstance( 'E' );
+print_r( $l );
+//LogUtil::_debug( 'adas' );
+
+/*
 $db1 = MySQLiUtilPool::getInstance( 'localhost', 'root', 'kirisame', 'mysql' );
 print_r( $db1 );
 $q = new MySQLiQueryUtil( 'localhost', 'root', 'kirisame', 'wechatclasstmp' );
@@ -26,6 +31,7 @@ print_r( $r );
 
 $app = new Application( $config );
 print_r( $app );
+*/
 
 }
 
