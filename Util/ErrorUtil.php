@@ -8,11 +8,14 @@ use Util\Log\LogUtil;
 class ErrorUtil
 {
     static $oldExceptionHandler;
+    static $oldErrorHandler;
 
     static function setGlobalExceptionHandler()
     {
         FilterUtil::addFilter( 'exceptionHandler', function( $info ) {
-            print_r( $info );
+            if( !$info['tolog'] ) return;
+            $exceptionLogger = LogUtil::getInstance( 'exceptionLogger' );
+            if( $exceptionLogger ) $exceptionLogger->log( $info['exception']->__toString() );
         }, 999 );
 
         self::$oldExceptionHandler = set_exception_handler( [ self::class, 'exceptionHandler' ] );
@@ -30,6 +33,26 @@ class ErrorUtil
 
     static function setGlobalErrorHandler()
     {
+        FilterUtil::addFilter( 'errorHandler', function( $info ) {
+            if( !$info['tolog'] ) return;
+            $errorLogger = LogUtil::getInstance( 'errorLogger' );
+            if( $errorLogger ) $errorLogger->log( implode( ',', $info['error'] ) );
+        }, 999 );
 
+        self::$oldErrorHandler = set_error_handler( [ self::class, 'errorHandler' ], E_ALL | E_STRICT );
+    }
+
+    static function errorHandler( $errorNo, $errorMsg, $file, $line )
+    {
+        $info = [
+            'error' => [
+                'errorNo' => $errorNo,
+                'errorMsg' => $errorMsg,
+                'file' => $file,
+                'line' => $line,
+            ],
+            'tolog' => true,
+        ];
+        FilterUtil::applyFilter( 'errorHandler', $info );
     }
 }

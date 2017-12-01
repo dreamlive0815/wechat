@@ -7,13 +7,28 @@ require( $baseDir . '/vendor/autoload.php' );
 use EasyWeChat\Foundation\Application;
 use EasyWeChat\Message\Text;
 */
+use Util\Log\LogUtil;
 use Util\ErrorUtil;
+use Util\FilterUtil;
+use Util\Exceptions\LogUtilException;
 
-
+LogUtil::addInstance( 'exceptionLogger', LogUtil::create( 'FS', __DIR__, 'ex.txt' ) );
+LogUtil::addInstance( 'errorLogger', LogUtil::create( 'FS', __DIR__, 'err.txt' ) );
+FilterUtil::addFilter( 'exceptionHandler', function( $info ) {
+    $info['tolog'] = false;
+    return $info;
+}, 99 );
+FilterUtil::addFilter( 'errorHandler', function( $info ) {
+    $info['tolog'] = false;
+    return $info;
+}, 99 );
+ErrorUtil::setGlobalExceptionHandler();
+ErrorUtil::setGlobalErrorHandler();
+$a = 1 / 0;
+//throw new LogUtilException( '' );
 try
 {
-ErrorUtil::setGlobalExceptionHandler();
-throw new Exception( '' );
+
 
 
 /*
