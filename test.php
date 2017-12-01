@@ -7,18 +7,25 @@ require( $baseDir . '/vendor/autoload.php' );
 use EasyWeChat\Foundation\Application;
 use EasyWeChat\Message\Text;
 */
-use Util\Log\LogUtil;
+use Util\ErrorUtil;
+
 
 try
 {
+ErrorUtil::setGlobalExceptionHandler();
+throw new Exception( '' );
 
+
+/*
 $logger = LogUtil::create( 'FS', __DIR__, '1.txt' );
 
 print_r( $logger );
 LogUtil::addInstance( 'EX', $logger );
 $l = LogUtil::getInstance( 'E' );
 print_r( $l );
-//LogUtil::_debug( 'adas' );
+LogUtil::_debug( 'adas' );
+*/
+
 
 /*
 $db1 = MySQLiUtilPool::getInstance( 'localhost', 'root', 'kirisame', 'mysql' );

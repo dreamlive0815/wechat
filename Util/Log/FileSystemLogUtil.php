@@ -13,7 +13,6 @@ class FileSystemLogUtil extends LogUtil
     function __construct( $dir, $filename )
     {
         $dir = strval( $dir ); $filename = strval( $filename );
-        var_dump( $dir );
         $dir = realpath( $dir );
         
         if( !is_dir( $dir ) || !is_writeable( $dir ) ) throw new LogUtilException( '用于Log的文件夹不可写' );

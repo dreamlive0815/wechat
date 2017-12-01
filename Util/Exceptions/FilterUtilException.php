@@ -2,7 +2,7 @@
 
 namespace Util\Exceptions;
 
-class LogUtilException extends \Exception
+class FilterUtilException extends \Exception
 {
 	function __construct( $errorMsg, $errorCode = 10001 )
     {
