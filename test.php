@@ -11,7 +11,17 @@ use Util\Log\LogUtil;
 use Util\ErrorUtil;
 use Util\FilterUtil;
 use Util\Exceptions\LogUtilException;
+use Util\MySQLi\MySQLiUtilPool as DB;
 
+$a = DB::getInstance( 'localhost', 'root', 'kirisame', 'wechatclasstmp' );
+DB::addInstance( 'T', $a );
+
+DB::setDefault( DB::getInstance( 'localhost', 'root', 'kirisame' ) );
+$r = DB::exec( 'show databases' );
+print_r( $r );
+print_r( DB::$utils );
+print_r( DB::getInstanceByKey( 'Tt' ) );
+/*
 LogUtil::addInstance( 'exceptionLogger', LogUtil::create( 'FS', __DIR__, 'ex.txt' ) );
 LogUtil::addInstance( 'errorLogger', LogUtil::create( 'FS', __DIR__, 'err.txt' ) );
 FilterUtil::addFilter( 'exceptionHandler', function( $info ) {
@@ -25,7 +35,8 @@ FilterUtil::addFilter( 'errorHandler', function( $info ) {
 ErrorUtil::setGlobalExceptionHandler();
 ErrorUtil::setGlobalErrorHandler();
 $a = 1 / 0;
-//throw new LogUtilException( '' );
+//throw new LogUtilException( '' );\
+*/
 try
 {
 

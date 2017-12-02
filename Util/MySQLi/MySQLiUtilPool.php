@@ -8,6 +8,32 @@ class MySQLiUtilPool
 {
     static $utils = [];
 
+    static $default;
+
+    static function addInstance( $key, MySQLiUtil $util )
+    {
+        if( isset( self::$utils[$key] ) ) throw new \Exception( '键名已存在' );
+        self::$utils[$key] = $util;
+    }
+
+    static function getInstanceByKey( $key )
+    {
+        if( !isset( self::$utils[$key] ) ) return null;
+        return self::$utils[$key];
+    }
+
+    static function setDefault( MySQLiUtil $util )
+    {
+        self::$default = $util;
+    }
+
+    static function __callStatic( $func, $args )
+    {
+        if( !self::$default ) return null;
+        if( !method_exists( self::$default, $func ) ) return null;
+        return call_user_func_array( [ self::$default, $func ], $args );
+    }
+
     static function getInstance( $host, $username, $password, $dbname = null )
     {
         foreach( self::$utils as $util )
