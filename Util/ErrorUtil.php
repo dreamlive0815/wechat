@@ -16,6 +16,7 @@ class ErrorUtil
             if( !$info['tolog'] ) return;
             $exceptionLogger = LogUtil::getInstance( 'exceptionLogger' );
             if( $exceptionLogger ) $exceptionLogger->log( $info['exception']->__toString() );
+            return $info;
         }, 999 );
 
         self::$oldExceptionHandler = set_exception_handler( [ self::class, 'exceptionHandler' ] );
@@ -37,6 +38,7 @@ class ErrorUtil
             if( !$info['tolog'] ) return;
             $errorLogger = LogUtil::getInstance( 'errorLogger' );
             if( $errorLogger ) $errorLogger->log( implode( ',', $info['error'] ) );
+            return $info;
         }, 999 );
 
         self::$oldErrorHandler = set_error_handler( [ self::class, 'errorHandler' ], E_ALL | E_STRICT );
