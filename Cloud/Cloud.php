@@ -56,7 +56,6 @@ class Cloud
 
     static function encryptSongArgs( $args )
     {
-        
         if( is_array( $args ) )
             $str = json_encode( $args );
         else
