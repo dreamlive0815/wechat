@@ -13,5 +13,10 @@ $info['name'] = $detail['name'];
 $url = Cloud::getSongURLInfo( $id );
 $url = $url['data'][0];
 $info['url'] = $url['url'];
+$filename = $info['name'] . '.mp3';
 
-print_r( $info );
+$content = file_get_contents( $info['url'] );
+
+header( "Content-Disposition: attachment; filename={$filename}" );
+
+echo $content;

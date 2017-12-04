@@ -111,6 +111,7 @@ class Cloud
     static function getSongDetailInfo( $id )
     {
         $json = self::callAPI( '/weapi/v3/song/detail?csrf_token=', self::getSongDetailArgs( $id ) );
+        if( !isset( $json['songs'] ) || empty( $json['songs'] ) ) throw new Exception( '无法获取歌曲信息' );
         return $json;
     }
 }
