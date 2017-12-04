@@ -4,5 +4,5 @@ require( '../autoload.php' );
 
 require( 'Cloud.php' );
 
-//echo Cloud::getRandString( 16 );
-echo Cloud::encryptSongInfo( '518686034' );
+$info = Cloud::getSongInfo( '496869422' );
+print_r( $info );

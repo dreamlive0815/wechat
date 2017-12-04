@@ -11,6 +11,8 @@ class Cloud
         '0102030405060708',
     ];
 
+    static $base = 'http://music.163.com';
+
     static function getRandString( $length )
     {
         $length = abs( intval( $length) );
@@ -52,9 +54,30 @@ class Cloud
         return http_build_query( $args );
     }
 
-    static function encryptSongInfo( $id )
+    static function getSongBaseArgs( $id )
     {
-        $plainText = "{\"ids\":\"[{$id}]\",\"br\":128000,\"csrf_token\":\"\"}";
-        return self::encrypt( $plainText, '' );
+        return [
+            'ids' => "[{$id}]",
+            'br' => 128000,
+            'csrf_token' => '',
+        ];
+    }
+
+    static function encryptSongArgs( array $args )
+    {
+        return self::encrypt( json_encode( $args ), 'a8LWv2uAtXjzSfkQ' );
+    }
+
+    static function getSongInfo( $id )
+    {
+        $curl = new CurlUtil( static::$base . '/weapi/song/enhance/player/url?csrf_token=' );
+        $curl->opt( CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded',
+        ] )->referer( static::$base );
+
+        $response = $curl->POST( self::encryptSongArgs( self::getSongBaseArgs( $id ) ) );
+        $json = json_decode( $response, true );
+        if( empty( $json ) ) throw new Exception( '数据出错' );
+        return $json;
     }
 }
