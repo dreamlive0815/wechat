@@ -101,10 +101,9 @@ class Cloud
 
     static function getSongDetailArgs( $id )
     {
-        return sprintf( '{"id":"%s","c":"[{\"id\":\"%s\"}]","csrf_token":""}', $id, $id );
         return [
             'id' => $id,
-            'c' => '"' . json_encode( [ [ 'id' => $id ] ] ) . '"',
+            'c' => json_encode( [ [ 'id' => $id ] ] ),
             'csrf_token' => '',
         ];
     }
