@@ -54,30 +54,65 @@ class Cloud
         return http_build_query( $args );
     }
 
-    static function getSongBaseArgs( $id )
+    static function encryptSongArgs( $args )
     {
+        
+        if( is_array( $args ) )
+            $str = json_encode( $args );
+        else
+            $str = strval( $args );
+        return self::encrypt( $str, '' );
+    }
+
+    static function callAPI( $url, $args )
+    {
+        $curl = new CurlUtil( static::$base . $url );
+        $curl->opt( CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded',
+        ] )->referer( static::$base );
+
+        $postRaw = self::encryptSongArgs( $args );
+        $response = $curl->POST( $postRaw );
+        $json = json_decode( $response, true );
+        if( empty( $json ) ) throw new Exception( '数据出错' );
+        return $json;
+    }
+
+    static function getSongURLArgs( $ids )
+    {
+        $_ids = [];
+        if( is_array( $ids ) )
+            foreach( $ids as $id ) $_ids[] = intval( $id );
+        else
+            $_ids[] = intval( $ids );
+        
         return [
-            'ids' => "[{$id}]",
+            'ids' => $_ids,
             'br' => 128000,
             'csrf_token' => '',
         ];
     }
 
-    static function encryptSongArgs( array $args )
+    static function getSongURLInfo( $id )
     {
-        return self::encrypt( json_encode( $args ), 'a8LWv2uAtXjzSfkQ' );
+        $json = self::callAPI( '/weapi/song/enhance/player/url?csrf_token=', self::getSongURLArgs( $id ) );
+        if( !isset( $json['data'] ) || empty( $json['data'] ) ) throw new Exception( '无法获取歌曲URL' );
+        return $json;
     }
 
-    static function getSongInfo( $id )
+    static function getSongDetailArgs( $id )
     {
-        $curl = new CurlUtil( static::$base . '/weapi/song/enhance/player/url?csrf_token=' );
-        $curl->opt( CURLOPT_HTTPHEADER, [
-            'Content-Type: application/x-www-form-urlencoded',
-        ] )->referer( static::$base );
+        return sprintf( '{"id":"%s","c":"[{\"id\":\"%s\"}]","csrf_token":""}', $id, $id );
+        return [
+            'id' => $id,
+            'c' => '"' . json_encode( [ [ 'id' => $id ] ] ) . '"',
+            'csrf_token' => '',
+        ];
+    }
 
-        $response = $curl->POST( self::encryptSongArgs( self::getSongBaseArgs( $id ) ) );
-        $json = json_decode( $response, true );
-        if( empty( $json ) ) throw new Exception( '数据出错' );
+    static function getSongDetailInfo( $id )
+    {
+        $json = self::callAPI( '/weapi/v3/song/detail?csrf_token=', self::getSongDetailArgs( $id ) );
         return $json;
     }
 }
