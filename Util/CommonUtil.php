@@ -4,6 +4,11 @@ namespace Util;
 
 class CommonUtil
 {
+    static function getR( $key )
+    {
+        return isset( $_REQUEST[$key] ) ? $_REQUEST[$key] : null;
+    }
+
     static function getURLInfo( $url )
     {
         $path = $url; $args = [];
@@ -32,7 +37,22 @@ class CommonUtil
     static function getURLArgs( $url )
     {
         $info = self::getURLInfo( $url );
-        print_r( $info );
         return $info['args'];
+    }
+
+    static function getURL( $oldURL, array $override = [], array $drop = [] )
+    {
+        $info = self::getURLInfo( $oldURL );
+        $args = $info['args'];
+        $args = array_merge( $args, $override );
+        $args = array_diff_key( $args, $drop );
+        $s = ''; $f = 1;
+        foreach( $args as $k => $v )
+        {
+            if( $f ) $f = 0; else $s .= '&';
+            $s .= $k . '=' . $v;
+        }
+        if( $s ) $s = '?' . $s;
+        return $info['path'] . $s;
     }
 }

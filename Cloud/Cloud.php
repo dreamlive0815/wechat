@@ -120,6 +120,6 @@ class Cloud
     {
         if( preg_match( '/song\/(\d+)\//', $url, $match ) ) return intval( $match[1] );
         $args = CommonUtil::getURLArgs( $url );
-        return isset( $args['id'] ) ? intval( $args['id'] ) : null;
+        return isset( $args['id'] ) ? intval( $args['id'] ) : intval( $url );
     }
 }

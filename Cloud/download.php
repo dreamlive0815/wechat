@@ -1,10 +1,6 @@
 <?php
 
-require( '../autoload.php' );
-
-require( 'Cloud.php' );
-
-$id = isset( $_REQUEST['id'] ) ? $_REQUEST['id'] : null;
+require( 'head.php' );
 
 $info = [];
 $detail = Cloud::getSongDetailInfo( $id );
