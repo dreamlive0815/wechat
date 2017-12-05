@@ -10,7 +10,7 @@ use Util\Log\LogUtil as LU;
 
 try
 {
-    $logger = LU::create( 'FS', __DIR__, 'error.log' );
+    $logger = LU::create( 'FS', __DIR__ . '/../debug', 'error.log' );
     LU::addInstance( 'errorLogger', $logger );
     LU::addInstance( 'exceptionLogger', $logger );
 }
@@ -18,15 +18,7 @@ catch(Exception $ex)
 {
     echo $ex->getMessage();
 }
-/*
-$errorLog = function( $info ) {
-    $info['tolog'] = false;
-    return $info;
-};
 
-FU::addFilter( 'exceptionHandler', $errorLog, 99 );
-FU::addFilter( 'errorHandler', $errorLog, 99 );
-*/
 EU::setGlobalErrorHandler();
 EU::setGlobalExceptionHandler();
 
