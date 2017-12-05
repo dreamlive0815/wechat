@@ -14,7 +14,7 @@ spl_autoload_register( function( $class ) {
     $filename = $currentDir . '/' . $real . '.php';
     if( !is_file( $filename ) || !is_readable( $filename ) )
     {
-        throw new AutoLoadException( '无法加载类:' . $class );
+        //throw new AutoLoadException( '无法加载类:' . $class );
     }
     require( $filename );
 } );

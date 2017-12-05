@@ -1,5 +1,6 @@
 <?php
 
+use Util\CommonUtil;
 use Util\CurlUtil;
 
 class Cloud
@@ -113,5 +114,12 @@ class Cloud
         $json = self::callAPI( '/weapi/v3/song/detail?csrf_token=', self::getSongDetailArgs( $id ) );
         if( !isset( $json['songs'] ) || empty( $json['songs'] ) ) throw new Exception( '无法获取歌曲信息' );
         return $json;
+    }
+
+    static function getSongID( $url )
+    {
+        if( preg_match( '/song\/(\d+)\//', $url, $match ) ) return intval( $match[1] );
+        $args = CommonUtil::getURLArgs( $url );
+        return isset( $args['id'] ) ? intval( $args['id'] ) : null;
     }
 }
