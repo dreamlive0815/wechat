@@ -18,4 +18,9 @@ $action = CU::getR( 'action' );
 
 $classname = "\\Control\\{$controller}Controller";
 $controllerInstance = new $classname();
+$methodname = "{$action}Action";
+
+if( !method_exists( $controllerInstance, $methodname ) ) throw new Exception( '动作' . $action . '不存在' );
+
+$controllerInstance->$methodname();
 

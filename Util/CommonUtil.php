@@ -4,6 +4,31 @@ namespace Util;
 
 class CommonUtil
 {
+    static $map = [];
+
+    static function getVal( $key )
+    {
+        $key = strval( $key );
+        return isset( self::$map[$key] ) ? self::$map[$key] : null;
+    }
+
+    static function setVal( $key, $val = null )
+    {
+        if( is_array( $key ) )
+        {
+            foreach( $key as $k => $v )
+            {
+                $k = strval( $k );
+                self::$map[$k] = $v;
+            }
+        }
+        else
+        {
+            $key = strval( $key );
+            self::$map[$key] = $val;
+        }
+    }
+
     static function getR( $key )
     {
         return isset( $_REQUEST[$key] ) ? $_REQUEST[$key] : null;
