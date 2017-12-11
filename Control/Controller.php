@@ -6,7 +6,7 @@ use Util\JsonUtil as JSON;
 
 class Controller
 {
-    static function echo( $errorCode = 0, $errorMsg = '', $data = null )
+    static function output( $errorCode = 0, $errorMsg = '', $data = null )
     {
         echo JSON::stringify( [
             'errorCode' => $errorCode,

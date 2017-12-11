@@ -20,8 +20,8 @@ class UserController extends Controller
         DB::setDefault( $instance );
         
         $user = \Model\User::getUserByOpenid( $openid );
-        if( !$user->id ) return $this->echo( 10003, '用户不存在' );
+        if( !$user->id ) return $this->output( 10003, '用户不存在' );
 
-        return $this->echo( 0, '', $user->map );
+        return $this->output( 0, '', $user->map );
     }
 }

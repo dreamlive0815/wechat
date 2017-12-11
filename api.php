@@ -22,7 +22,7 @@ FU::addFilter( 'exceptionHandler', function( $info ) {
     $ex = $info['exception'];
     $code = $ex->getCode(); $msg = $ex->getMessage();
     if( !$code ) $code = 10001;
-    \Control\Controller::echo( $code, $msg );   
+    \Control\Controller::output( $code, $msg );   
     return $info;
 }, 999 );
 
