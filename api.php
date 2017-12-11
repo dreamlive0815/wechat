@@ -5,11 +5,24 @@ require( 'autoload.php' );
 use Util\CommonUtil as CU;
 use Util\ErrorUtil as EU;
 use Util\FilterUtil as FU;
+use Util\Log\LogUtil as LU;
 
+try
+{
+    $logger = LU::create( 'FS', __DIR__ . '/debug', 'error.log' );
+    LU::addInstance( 'errorLogger', $logger );
+    LU::addInstance( 'exceptionLogger', $logger );
+}
+catch( Exception $ex ) {}
+
+EU::setGlobalErrorHandler();
 EU::setGlobalExceptionHandler();
 
 FU::addFilter( 'exceptionHandler', function( $info ) {
-    echo $info['exception']->getMessage();
+    $ex = $info['exception'];
+    $code = $ex->getCode(); $msg = $ex->getMessage();
+    if( !$code ) $code = 10001;
+    \Control\Controller::echo( $code, $msg );   
     return $info;
 }, 999 );
 

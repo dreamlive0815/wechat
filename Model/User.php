@@ -2,7 +2,6 @@
 
 namespace Model;
 
-use Util\CommonUtil as CU;
 use Util\MySQLi\MySQLiUtilPool as DB;
 
 class User extends Model
