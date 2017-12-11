@@ -10,6 +10,5 @@ use Util\Session\SessionUtil as SU;
 SU::start();
 
 
-
 VU::head( 'test' );
 VU::foot();

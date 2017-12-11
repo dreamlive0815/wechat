@@ -11,9 +11,10 @@ class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
     public function read( $sessionID )
     {
         $q = DB::$default->getQuery( 'session' );
-        $val = $q->where( 'session_id', $sessionID )->where( \Util\MySQLi\Raw( 'UNIX_TIMESTAMP( expire_time ) > CURRENT_TIMESTAMP' ) )->limit( 1 )->get()->fir();
-        if( $val ) return $val['data'];
-        return '';
+        $val = $q->where( 'session_id', $sessionID )->where( \Util\MySQLi\Raw( 'UNIX_TIMESTAMP( expire_time ) > UNIX_TIMESTAMP( now() )' ) )->limit( 1 )->get()->fir();
+        $data = '';
+        if( $val ) $data = $val['data'];
+        return $data;
     }
 
     public function write( $sessionID, $data )
@@ -32,5 +33,11 @@ class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
             'data' => $data,
         ];
         return $q->set( $set )->update();
+    }
+
+    public function destroy( $sessionID )
+    {
+        $q = DB::$default->getQuery( 'session' );
+        return $q->where( 'session_id', $sessionID )->delete();
     }
 }
