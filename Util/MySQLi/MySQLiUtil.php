@@ -40,6 +40,9 @@ class MySQLiUtil
             case 1115:
                 $msg = '未知的字符集';
                 break;
+            case 1146:
+                $msg = '数据表不存在';
+                break;
             case 2002:
                 $msg = '未知的主机';
                 break;
