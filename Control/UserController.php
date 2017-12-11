@@ -24,4 +24,9 @@ class UserController extends Controller
 
         return $this->output( 0, '', $user->map );
     }
+
+    function testAction()
+    {
+        
+    }
 }
