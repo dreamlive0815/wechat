@@ -16,5 +16,5 @@ spl_autoload_register( function( $class ) {
     {
         //throw new AutoLoadException( '无法加载类:' . $class );
     }
-    else require( $filename );
+    else require_once( $filename );
 } );
