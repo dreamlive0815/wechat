@@ -67,7 +67,7 @@ class MySQLiUtil
         {
             $errorMsg = self::errorCode2Msg( $errorCode );
             trigger_error( $this->__toString() );
-            throw new MySQLiUtilException( $errorMsg );
+            throw new MySQLiUtilException( $errorMsg, $errorCode );
         }
 
         $con->query( 'set names utf8' );      //编码UTF-8
@@ -103,7 +103,7 @@ class MySQLiUtil
         {
             trigger_error( $this->__toString() );
             if( self::$throw )
-                throw new MySQLiUtilException( $errorMsg );
+                throw new MySQLiUtilException( $errorMsg, $errorCode );
         }
 
         if( gettype( $result ) == 'object' && get_class( $result ) == 'mysqli_result' )
