@@ -4,7 +4,7 @@ namespace Util;
 
 class ViewUtil
 {
-    function head( $title = '' ) { ?>
+    static function head( $title = '' ) { ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -92,7 +92,7 @@ class ViewUtil
 <?php    
     }
 
-    function foot() { ?>
+    static function foot() { ?>
 </div>
 </body>
 </html><?php
