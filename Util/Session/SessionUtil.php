@@ -9,11 +9,18 @@ class SessionUtil
 {
     static function start()
     {
-        session_set_save_handler( new MySQLiHandler() );
         if( DB::$default && DB::tableExists( 'session' ) )
         {
-            
+            session_set_save_handler( new MySQLiHandler() );
         }
         session_start();
+    }
+
+    static function getVal( $key )
+    {
+        if( !isset( $_SESSION ) ) return null;
+        $key = strval( $key );
+        if( !isset( $_SESSION[$key] ) ) return null;
+        return $_SESSION[$key];
     }
 }
