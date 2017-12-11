@@ -1,5 +1,7 @@
 <?php
 
+$useDB = true;
+
 require( 'head.php' );
 
 use Util\ViewUtil as VU;

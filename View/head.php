@@ -5,6 +5,7 @@ require( '../autoload.php' );
 use Util\ErrorUtil as EU;
 use Util\FilterUtil as FU;
 use Util\Log\LogUtil as LU;
+use Util\MySQLi\MySQLiUtilPool as DB;
 
 try
 {
@@ -22,3 +23,10 @@ FU::addFilter( 'exceptionHandler', function( $info ) {
     echo $ex->getMessage();
     return $info;
 }, 999 );
+
+if( isset( $useDB ) && $useDB )
+{
+    $config = require( '../config_db.php' );
+    $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
+    DB::setDefault( $instance );
+}

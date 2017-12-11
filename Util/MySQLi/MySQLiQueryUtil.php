@@ -178,7 +178,8 @@ class MySQLiQueryUtil
             else
             {
                 $v = $this->util->filter( $v );
-                $a[] = "{$k} = '{$v}'";
+                $r_v = 'null'; if( $v !== null ) $r_v = "'{$v}'";
+                $a[] = "{$k} = {$r_v}";
             }
         }
         if( !$a ) throw new MySQLiQueryUtilException( '_set:至少更新一个字段' );
@@ -369,7 +370,7 @@ class MySQLiQueryUtil
             foreach( $i as $ii )
             {
                 $ii = $this->util->filter( $ii );
-                $aa[] = "'{$ii}'";
+                if( $ii === null ) $aa[] = 'null'; else $aa[] = "'{$ii}'";
             }
             $a[] = '(' . implode( ',', $aa ) . ')'; 
         }

@@ -11,3 +11,12 @@ CREATE TABLE `easywechat`.`account` (
     PRIMARY KEY (`id`), 
     UNIQUE (`openid`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `easywechat`.`session` (
+    `session_id` VARCHAR(32) ,
+    `user_id` INT ,
+    `update_time` DATETIME ,
+    `expire_time` DATETIME ,
+    `data` TEXT ,
+    PRIMARY KEY (`session_id`)
+) ENGINE = InnoDB;

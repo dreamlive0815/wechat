@@ -86,6 +86,7 @@ class MySQLiUtil
     //对特殊字符进行转义,防止SQL注入
     function filter( $str )
     {
+        if( $str === null ) return null;
         $str = stripslashes( $str );
         $str = $this->con->real_escape_string( $str );
         return $str;
