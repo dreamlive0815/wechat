@@ -9,8 +9,8 @@ use Util\Session\SessionUtil as SU;
 
 SU::start();
 
-$openid = SU::getVal( 'wechat_openid' );
-if( !$openid )
+$wechat_user = SU::getVal( 'wechat_user' );
+if( !$wechat_user )
 {
     require( '../wechat_head.php' );
     $oauth = $app->oauth;
