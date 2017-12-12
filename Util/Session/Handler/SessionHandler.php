@@ -9,6 +9,7 @@ class SessionHandler
     public function open( $savePath, $sessionID )
     {
         session_set_cookie_params( self::$maxLifeTime );
+        ini_set( 'session.serialize_handler', 'php_serialize' );
         return true;
     }
 

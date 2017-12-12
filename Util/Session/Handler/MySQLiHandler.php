@@ -8,6 +8,7 @@ use Util\Session\SessionUtil as SU;
 
 class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
 {
+
     public function read( $sessionID )
     {
         $q = DB::$default->getQuery( 'session' );
@@ -39,5 +40,11 @@ class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
     {
         $q = DB::$default->getQuery( 'session' );
         return $q->where( 'session_id', $sessionID )->delete();
+    }
+
+    public function close()
+    {
+        $q = DB::$default->getQuery( 'session' );
+        return $q->where( \Util\MySQLi\Raw( 'UNIX_TIMESTAMP( expire_time ) <= UNIX_TIMESTAMP( now() )' ) )->delete();
     }
 }
