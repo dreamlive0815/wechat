@@ -21,8 +21,5 @@ if( !$wechat_user )
     die( 0 );
 }
 
-print_r( $wechat_user );
-
-
 VU::head( 'test' );
 VU::foot();
