@@ -1,6 +1,5 @@
 <?php
 
-$baseDir = 'D:/Site/wechat/overtrue3.1';
 return [
     /* 个人号 */
     'app_id' => 'wxec6559280db2592b',
@@ -14,7 +13,7 @@ return [
 
     'log' => [
         'level' => 'debug',
-        'file'  => $baseDir . '/log/wechat.log',
+        'file'  => './debug/wechat.log',
     ],
 
     'guzzle' => [

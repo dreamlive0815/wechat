@@ -18,6 +18,7 @@ $message = '<xml>
 </xml>
 ';
 //oQ4KVw14cKQ4lucVr4N8mJNY_Cro 个人号
+//oZy0Mw58RMSmyys0WR9xRp-y5v0U 测试号
 
 $curl = new CurlUtil( $url );
 $response = $curl->POST( $message );
