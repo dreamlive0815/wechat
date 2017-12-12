@@ -7,9 +7,10 @@ require( '../head.php' );
 use Util\ViewUtil as VU;
 use Util\Session\SessionUtil as SU;
 
-SU::start();
+//SU::start();
+session_start();
 
-$wechat_user = SU::getVal( 'wechat_user' );
+$wechat_user = $_SESSION['wechat_user'];
 if( !$wechat_user )
 {
     require( '../wechat_head.php' );
