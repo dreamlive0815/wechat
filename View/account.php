@@ -12,3 +12,5 @@ SU::start();
 
 VU::head( 'test' );
 VU::foot();
+
+echo 'success';

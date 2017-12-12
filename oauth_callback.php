@@ -1,6 +1,6 @@
 <?php
 
-require( './autoload.php' );
+require( './head.php' );
 
 require( './wechat_head.php' );
 

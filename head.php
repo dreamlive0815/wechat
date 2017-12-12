@@ -11,7 +11,7 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 
 try
 {
-    $logger = LU::create( 'FS', __DIR__ . '/../debug', 'error.log' );
+    $logger = LU::create( 'FS', $baseDir . '/debug', 'error.log' );
     LU::addInstance( 'errorLogger', $logger );
     LU::addInstance( 'exceptionLogger', $logger );
 }
@@ -28,7 +28,7 @@ FU::addFilter( 'exceptionHandler', function( $info ) {
 
 if( isset( $useDB ) && $useDB )
 {
-    $config = require( '../config_db.php' );
+    $config = require( $baseDir . '/config_db.php' );
     $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
     DB::setDefault( $instance );
 }
