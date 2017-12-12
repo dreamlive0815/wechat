@@ -1,6 +1,8 @@
 <?php
 
-require( '../autoload.php' );
+$baseDir = __DIR__;
+
+require( $baseDir . '/autoload.php' );
 
 use Util\ErrorUtil as EU;
 use Util\FilterUtil as FU;

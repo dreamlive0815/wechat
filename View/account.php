@@ -2,7 +2,7 @@
 
 $useDB = true;
 
-require( 'head.php' );
+require( '../head.php' );
 
 use Util\ViewUtil as VU;
 use Util\Session\SessionUtil as SU;

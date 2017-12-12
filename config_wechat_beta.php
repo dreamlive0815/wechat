@@ -16,6 +16,11 @@ return [
         'file'  => './debug/wechat.log',
     ],
 
+    'oauth' => [
+        'scopes'   => ['snsapi_userinfo'],
+        'callback' => '/wechat/oauth_callback.php',
+    ],
+
     'guzzle' => [
         'timeout' => 3.0,
         'verify' => false,
