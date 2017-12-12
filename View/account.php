@@ -10,7 +10,7 @@ use Util\Session\SessionUtil as SU;
 //SU::start();
 session_start();
 
-$wechat_user = $_SESSION['wechat_user'];
+$wechat_user = SU::getval( 'wechat_user' );
 if( !$wechat_user )
 {
     require( '../wechat_head.php' );

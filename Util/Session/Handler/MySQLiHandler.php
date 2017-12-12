@@ -15,6 +15,7 @@ class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
         $val = $q->where( 'session_id', $sessionID )->where( \Util\MySQLi\Raw( 'UNIX_TIMESTAMP( expire_time ) > UNIX_TIMESTAMP( now() )' ) )->limit( 1 )->get()->fir();
         $data = '';
         if( $val ) $data = $val['data'];
+        error_log( 'read:  ' . $data . "\n\n", 3,  __DIR__ . '/../../../debug/oauth.log' );
         return $data;
     }
 
@@ -33,6 +34,7 @@ class MySQLiHandler extends SessionHandler implements \SessionHandlerInterface
             'expire_time' => FU::getMySQLDatetime( time() + self::$maxLifeTime ),
             'data' => $data,
         ];
+        error_log( 'write:  ' . $data . "\n\n", 3,  __DIR__ . '/../../../debug/oauth.log' );
         return $q->set( $set )->update();
     }
 

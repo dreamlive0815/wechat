@@ -14,7 +14,7 @@ $oauth = $app->oauth;
 $user = $oauth->user();
 
 $_SESSION['wechat_user'] = $user->toArray();
-$target_url = $_SESSION['target_url'];
+$target_url = SU::getval( 'target_url' );
 if( !$target_url ) $target_url = 'View/index.php';
 
 header( 'Location: '. $target_url );
