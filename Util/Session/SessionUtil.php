@@ -23,4 +23,11 @@ class SessionUtil
         if( !isset( $_SESSION[$key] ) ) return null;
         return $_SESSION[$key];
     }
+
+    static function setVal( $key, $val )
+    {
+        if( !isset( $_SESSION ) ) return null;
+        $key = strval( $key );
+        $_SESSION[$key] = $val;
+    } 
 }

@@ -13,7 +13,12 @@ return [
 
     'log' => [
         'level' => 'debug',
-        'file'  => './debug/wechat.log',
+        'file'  => __DIR__ . '/debug/wechat.log',
+    ],
+
+    'oauth' => [
+        'scopes'   => [ 'snsapi_userinfo' ],
+        'callback' => '/wechat/oauth_callback.php',
     ],
 
     'guzzle' => [
