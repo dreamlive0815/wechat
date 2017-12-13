@@ -13,18 +13,27 @@ class UserController extends Controller
         SU::start();
     }
 
+    function setDefaultDB()
+    {
+        if( DB::$default ) return;
+        $config = require( 'config_db.php' );
+        $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
+        DB::setDefault( $instance );
+    }
+
     function getOpenid()
     {
-        return CU::getR( 'openid' );
+        $this->setDefaultDB();
+        self::startSession();
+        $openid = SU::getVal( 'openid' );
+        if( !$openid ) throw new \Exception( '无法获取用户的openid' ); 
+        return $openid;
     }
 
     function getUserInfoAction()
     {
+        $this->setDefaultDB();
         $openid = $this->getOpenid();
-        $config = require( 'config_db.php' );
-        $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
-        DB::setDefault( $instance );
-        
         $user = \Model\User::getUserByOpenid( $openid );
         if( !$user->id ) return $this->output( 10003, '用户不存在' );
 
@@ -33,6 +42,6 @@ class UserController extends Controller
 
     function testAction()
     {
-        
+        echo $this->getOpenid();
     }
 }
