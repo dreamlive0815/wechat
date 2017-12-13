@@ -45,8 +45,14 @@ class UserController extends Controller
     {
         $this->setDefaultDB();
         $openid = $this->getOpenid();
-
         $t1 = [ 'sid', 'idcard', 'edu_passwd', 'ecard_passwd', 'nic_passwd', 'lib_passwd' ];
+        $t2 = [];
+        foreach( $t1 as $v )
+        {
+            $t2[$v] = CU::getR( $v ); 
+        }
+        US::createOrUpdateUser( $openid, $t2 );
+        return $this->output( 0, '', null );
     }
 
     function testAction()
