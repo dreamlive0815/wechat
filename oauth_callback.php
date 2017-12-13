@@ -17,7 +17,7 @@ $_SESSION['openid'] = $user['id'];
 $_SESSION['encoded_info'] = base64_encode( json_encode( $user ) );
 
 $target_url = SU::getval( 'target_url' );
-if( !$target_url ) $target_url = 'View/index.php';
+if( !$target_url ) $target_url = 'View/account.php';
 
 header( 'Location: '. $target_url );
 die( 0 );
