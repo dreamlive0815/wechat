@@ -5,6 +5,7 @@ namespace Control;
 use Util\CommonUtil as CU;
 use Util\MySQLi\MySQLiUtilPool as DB;
 use Util\Session\SessionUtil as SU;
+use Model\User as US;
 
 class UserController extends Controller
 {
@@ -34,7 +35,7 @@ class UserController extends Controller
     {
         $this->setDefaultDB();
         $openid = $this->getOpenid();
-        $user = \Model\User::getUserByOpenid( $openid );
+        $user = US::getUserByOpenid( $openid );
         if( !$user->id ) return $this->output( 10003, '用户不存在' );
 
         return $this->output( 0, '', $user->map );
@@ -42,6 +43,10 @@ class UserController extends Controller
 
     function testAction()
     {
-        echo $this->getOpenid();
+        
+        $this->setDefaultDB();
+        $openid = 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro';
+        US::createOrUpdateUser( $openid, [ 'edu_passwd' => '199560815', 'nic_passwd' => null ] );
+        
     }
 }

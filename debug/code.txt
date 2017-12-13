@@ -6,8 +6,11 @@ CREATE TABLE `easywechat`.`account` (
     `idcard` VARCHAR(8) COMMENT '身份证后六位',
     `edu_passwd` VARCHAR(32), 
     `ecard_passwd` VARCHAR(16), 
-    `nic_passwd` VARCHAR(16), 
-    `lib_passwd` VARCHAR(16), 
+    `nic_passwd` VARCHAR(16),
+    `lib_passwd` VARCHAR(16),
+    `register_time` DATETIME,
+    `update_time` DATETIME,
+    `follow` BOOLEAN DEFAULT '0',
     PRIMARY KEY (`id`), 
     UNIQUE (`openid`)
 ) ENGINE = InnoDB;

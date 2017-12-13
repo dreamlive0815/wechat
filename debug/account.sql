@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.3
+-- version 4.6.5.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 2017-12-11 11:51:46
--- 服务器版本： 5.7.20
--- PHP Version: 7.0.23
+-- Generation Time: 2017-12-13 10:38:41
+-- 服务器版本： 5.5.54
+-- PHP Version: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -35,15 +35,11 @@ CREATE TABLE `account` (
   `edu_passwd` varchar(32) DEFAULT NULL,
   `ecard_passwd` varchar(16) DEFAULT NULL,
   `nic_passwd` varchar(16) DEFAULT NULL,
-  `lib_passwd` varchar(16) DEFAULT NULL
+  `lib_passwd` varchar(16) DEFAULT NULL,
+  `register_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `follow` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- 转存表中的数据 `account`
---
-
-INSERT INTO `account` (`id`, `openid`, `usertype`, `sid`, `idcard`, `edu_passwd`, `ecard_passwd`, `nic_passwd`, `lib_passwd`) VALUES
-(1, 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro', 0, '2015331250027', '252614', '19960815', '252614', '123456', '0000');
 
 --
 -- Indexes for dumped tables
@@ -64,7 +60,7 @@ ALTER TABLE `account`
 -- 使用表AUTO_INCREMENT `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
