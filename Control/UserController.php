@@ -41,12 +41,20 @@ class UserController extends Controller
         return $this->output( 0, '', $user->map );
     }
 
+    function updateUserInfoAction()
+    {
+        $this->setDefaultDB();
+        $openid = $this->getOpenid();
+
+        $t1 = [ 'sid', 'idcard', 'edu_passwd', 'ecard_passwd', 'nic_passwd', 'lib_passwd' ];
+    }
+
     function testAction()
     {
-        
+        /*
         $this->setDefaultDB();
-        $openid = 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro';
+        $openid = $this->getOpenid();
         US::createOrUpdateUser( $openid, [ 'edu_passwd' => '199560815', 'nic_passwd' => null ] );
-        
+        */
     }
 }
