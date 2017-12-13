@@ -4,9 +4,15 @@ namespace Control;
 
 use Util\CommonUtil as CU;
 use Util\MySQLi\MySQLiUtilPool as DB;
+use Util\Session\SessionUtil as SU;
 
 class UserController extends Controller
 {
+    static function startSession()
+    {
+        SU::start();
+    }
+
     function getOpenid()
     {
         return CU::getR( 'openid' );

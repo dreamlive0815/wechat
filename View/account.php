@@ -6,12 +6,12 @@ require( '../head.php' );
 
 use Util\ViewUtil as VU;
 use Util\Session\SessionUtil as SU;
+use Control\UserController as US;
 
-//SU::start();
-session_start();
+US::startSession();
 
-$wechat_user = SU::getval( 'wechat_user' );
-if( !$wechat_user )
+$openid = SU::getval( 'openid' );
+if( !$openid )
 {
     require( '../wechat_head.php' );
     $oauth = $app->oauth;
@@ -20,6 +20,8 @@ if( !$wechat_user )
     $oauth->redirect()->send();
     die( 0 );
 }
+
+print_r( $_SESSION );
 
 VU::head( 'test' );
 VU::foot();

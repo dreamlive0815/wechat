@@ -5,9 +5,14 @@ $useDB = true;
 require( '../head.php' );
 
 use Util\Session\SessionUtil as SU;
+use Control\UserController as US;
 
-//SU::start();
-session_start();
+US::startSession();
 
-print_r( $_SESSION );
+$encodedInfo = SU::getVal( 'encoded_info' );
+
+$a = base64_decode( $encodedInfo );
+$a = json_decode( $a, true );
+print_r( $a );
+
 
