@@ -58,7 +58,7 @@ class ViewUtil
     {
         if(typeof args != 'object') return;
         var url = args.url || 'api.php';
-        var data = args.data || { controller : '' };
+        var data = args.data || { arg0 : '' };
         var success = args.success || function(data) {
             console.log('调用API成功');
             console.log(data);
