@@ -23,3 +23,15 @@ CREATE TABLE `easywechat`.`session` (
     `data` TEXT ,
     PRIMARY KEY (`session_id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `easywechat`.`cache` (
+    `id` INT NOT NULL AUTO_INCREMENT ,
+    `owner` VARCHAR(32) ,
+    `uid` VARCHAR(16) ,
+    `passwd` VARCHAR(32) ,
+    `type` VARCHAR(16) ,
+    `update_time` DATETIME ,
+    `expire_time` DATETIME ,
+    `data` TEXT ,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;

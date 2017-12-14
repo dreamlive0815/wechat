@@ -13,7 +13,8 @@ $server->setMessageHandler( function( $message ) {
     $reply = '';
     try
     {
-        $reply = $handlerClass::handle( $message );
+        $handlerClass::$message = $message;
+        $reply = $handlerClass::handle();
     }
     catch( \Exception $ex )
     {

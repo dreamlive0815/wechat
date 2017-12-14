@@ -4,9 +4,15 @@ namespace Handler;
 
 class Text extends Base
 {
-    static function handle( $message )
+    static function handle()
     {
-        $news = self::redirectToSettingPage();
+        return self::Query( 'course' );
+        $news = static::redirectToSettingPage();
         return $news;
+    }
+
+    static function handleText( $text )
+    {
+
     }
 }

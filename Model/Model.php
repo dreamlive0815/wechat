@@ -8,7 +8,8 @@ class Model
 
     public function __get( $key )
     {
-        return isset( $this->map[$key] ) ? isset( $this->map[$key] ) : null;
+        var_dump( $key );
+        return isset( $this->map[$key] ) ? $this->map[$key] : null;
     }
 
     public function __set( $key, $val )
