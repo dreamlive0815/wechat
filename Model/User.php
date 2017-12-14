@@ -7,15 +7,6 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 
 class User extends Model
 {
-    function __construct( array $map = [] )
-    {
-        $this->map = $map;
-    }
-
-    private static function checkDB()
-    {
-        if( !DB::$default ) throw new Exception( '请先初始化数据库工具' );
-    }
 
     static function getUserByOpenid( $openid, $arrayType = false )
     {
@@ -24,7 +15,7 @@ class User extends Model
         $a = $q->where( 'openid', $openid )->limit( 1 )->get()->fir();
         if( !$a ) $a = [];
         if( $arrayType ) return $a;
-        $instance = new User( $a );
+        $instance = new self( $a );
         return $instance;
     }
 
@@ -44,6 +35,6 @@ class User extends Model
             if( $v !== null ) $set[$k] = $v;
         }
         $set['update_time'] = FU::getMySQLDatetime();
-        $q->set( $set )->update();
+        return $q->set( $set )->update();
     }
 }

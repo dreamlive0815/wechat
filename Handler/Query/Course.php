@@ -6,6 +6,8 @@ class Course extends Query
 {
     static function buildArgs( $user )
     {
-        return [ 'passwd' => $user->edu_passwd ];
+        $args = parent::buildArgs( $user );
+        $args['passwd'] = $user->edu_passwd;
+        return $args;
     } 
 }
