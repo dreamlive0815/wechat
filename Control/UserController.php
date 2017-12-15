@@ -24,6 +24,7 @@ class UserController extends Controller
 
     function getOpenid()
     {
+        return 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro';
         $this->setDefaultDB();
         self::startSession();
         $openid = SU::getVal( 'openid' );
@@ -35,10 +36,10 @@ class UserController extends Controller
     {
         $this->setDefaultDB();
         $openid = $this->getOpenid();
-        $user = US::getUserByOpenid( $openid );
+        $user = US::getUser( [ 'openid' => $openid ] );
         if( !$user->id ) return $this->output( 10003, '用户不存在' );
 
-        return $this->output( 0, '', $user->map );
+        return $this->output( 0, '', $user->toArray() );
     }
 
     function updateUserInfoAction()

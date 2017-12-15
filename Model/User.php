@@ -9,17 +9,6 @@ class User extends Model
 {
     static $table = 'account';
 
-    static function getUserByOpenid( $openid, $arrayType = false )
-    {
-        self::checkDB(); 
-        $q = DB::$default->getQuery( static::getTableName() );
-        $a = $q->where( 'openid', $openid )->limit( 1 )->get()->fir();
-        if( !$a ) $a = [];
-        if( $arrayType ) return $a;
-        $instance = new self( $a );
-        return $instance;
-    }
-
     static function createOrUpdateUser( $openid, array $map )
     {
         self::checkDB();

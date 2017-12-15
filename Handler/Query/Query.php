@@ -20,7 +20,7 @@ class Query
     {
         $args = static::buildArgs( $user );
         $type = static::getType();
-        $cache = Cache::getCache( array_merge( $args, [ 'type' => $type, 'openid' => $user->openid ] ) );
+        $cache = Cache::getCache( array_merge( $args, [ 'type' => $type, 'owner' => $user->openid ] ) );
         print_r( $user );
         print_r( $cache );
     }
