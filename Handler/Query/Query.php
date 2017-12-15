@@ -112,7 +112,6 @@ class Query
         }
         if( $this->fromCache )
         {
-            if( $s ) $s .= "\n";
             $s .= "\n当前为缓存数据 生成时间:" . $this->cache->update_time;
         }
         return $s;

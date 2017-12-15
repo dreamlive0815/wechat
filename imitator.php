@@ -13,7 +13,7 @@ $message = '<xml>
 <MsgType><![CDATA[text]]></MsgType>
 <Event><![CDATA[CLICK]]></Event>
 <EventKey><![CDATA[Exam]]></EventKey>
-<Content>Course</Content>
+<Content>COURSE NOCACHE   year=2015-2016  semester=2</Content>
 <MsgId>6301084552610610382</MsgId>
 </xml>
 ';
