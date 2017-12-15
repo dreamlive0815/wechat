@@ -8,6 +8,13 @@ use Model\User;
 class Base
 {
     static $message;
+    static $cmdArgs = [];
+
+    static function getCmdArg( $key )
+    {
+        if( !isset( self::$cmdArgs[$key] ) ) return null;
+        return self::$cmdArgs[$key];
+    }
 
     static function getOpenid()
     {
@@ -25,14 +32,9 @@ class Base
         $type = ucfirst( $type );
         $openid = self::getOpenid();
         $user = User::getUser( $openid );
-        //if( !$user->id ) return static::redirectToSettingPage();
         $user->update_time = FU::getMySQLDatetime();
 
         $classname = "\\Handler\\Query\\{$type}";
         return new $classname( $user );
     }
-
-    
-
-    
 }

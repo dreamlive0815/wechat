@@ -19,7 +19,11 @@ class Text extends Base
             case 'Course':
                 $query = self::getQuery( 'Course' );
                 return $query->run();
-   
+
+            case 'TodayCourse':
+                $query = self::getQuery( 'Course' );
+                $query->today = true;
+                return $query->run();
         }
     }
 }

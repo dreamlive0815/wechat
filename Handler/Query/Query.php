@@ -51,6 +51,8 @@ class Query
 
     function run()
     {
+        if( !$this->user->id ) return $this->getRedirectSettingNews();
+
         $args = $this->buildArgs();
         $type = $this->getType();
         $args = array_merge( $args, [ 'type' => $type, 'owner' => $this->user->openid ] );
@@ -106,13 +108,12 @@ class Query
         $s = '';
         if( $this->errorFlag )
         {
-            if( $s ) $s .= "\n";
-            $s .= '服务器发生错误';
+            $s .= "\n服务器发生错误";
         }
         if( $this->fromCache )
         {
             if( $s ) $s .= "\n";
-            $s .= '当前为缓存数据 生成时间:' . $this->cache->update_time;
+            $s .= "\n当前为缓存数据 生成时间:" . $this->cache->update_time;
         }
         return $s;
     }
