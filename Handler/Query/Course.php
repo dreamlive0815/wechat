@@ -17,9 +17,6 @@ class Course extends Query
 
     function renderData( $data )
     {
-        print_r( $this );
-        echo $this->getStatusText();
-        print_r( $data );
         return 'hhh';
     }
 

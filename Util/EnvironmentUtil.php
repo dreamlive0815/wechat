@@ -21,4 +21,11 @@ class EnvironmentUtil
     {
         return $_SERVER['HTTP_HOST'];
     }
+
+    static function getServerBaseURL()
+    {
+        $protocol = self::getRequestProtocol();
+        $host = self::getServerHost();
+        return "{$protocol}://{$host}";
+    }
 }

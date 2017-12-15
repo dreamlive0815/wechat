@@ -153,7 +153,10 @@ class Query
 
     function getErrorImageURL()
     {
-        return '';
+        $imgCnt = 5;
+        $index = mt_rand( 0, $imgCnt - 1 );
+        $url = EU::getServerBaseURL() . "/wechat/Resource/Image/Fail/{$index}.jpg";
+        return $url;
     }
 
     function getNews( array $args = [] )
@@ -165,10 +168,7 @@ class Query
 
     function getRedirectSettingNews( $filter = null, $title = '账号信息有误', $description = '点击这里设置账号信息' )
     {
-        $protocol = EU::getRequestProtocol();
-        $host = EU::getServerHost();
-        $base = "{$protocol}://{$host}/wechat";
-        $url = $base . '/View/account.php';
+        $url = EU::getServerBaseURL() . '/wechat/View/account.php';
         if( $filter ) $url .= "?filter={$filter}";
         return $this->getNews( [ 
             'title' => $title,
