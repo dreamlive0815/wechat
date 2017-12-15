@@ -27,6 +27,10 @@ class Model
 
     public function __set( $key, $val )
     {
+        if( !$this->id ) return false;
+        self::checkDB();
+        $q = DB::$default->getQuery( static::getTableName() );
+        $q->where( 'id', $this->id )->set( [ $key => $val ] )->update();
         $this->map[$key] = $val;
     }
 

@@ -3,6 +3,7 @@
 namespace Handler;
 
 use Util\EnvironmentUtil as EU;
+use Util\FormatUtil as FU;
 use Model\User;
 use EasyWeChat\Message\News;
 
@@ -27,6 +28,7 @@ class Base
         $openid = self::getOpenid();
         $user = User::getUser( $openid );
         if( !$user->id ) return static::redirectToSettingPage();
+        $user->update_time = FU::getMySQLDatetime();
 
         $classname = "\\Handler\\Query\\{$type}";
         return $classname::run( $user );
