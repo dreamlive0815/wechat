@@ -8,7 +8,7 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 class Cache extends Model
 {
 
-    static function get( array $args )
+    static function getCache( array $args )
     {
         self::checkDB();
         $args = array_merge( [ 'openid' => null, 'type' => null, 'uid' => null, 'passwd' => null ], $args );

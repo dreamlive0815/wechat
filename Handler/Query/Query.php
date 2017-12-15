@@ -9,6 +9,7 @@ use Model\Cache;
 class Query
 {
     static $apiURL = 'https://m.zstu.edu.cn/capturer/index.php';
+    static $lifeTime = 3600;
 
     static function buildArgs( $user )
     {
@@ -19,7 +20,7 @@ class Query
     {
         $args = static::buildArgs( $user );
         $type = static::getType();
-        $cache = Cache::get( array_merge( $args, [ 'type' => $type, 'openid' => $user->openid ] ) );
+        $cache = Cache::getCache( array_merge( $args, [ 'type' => $type, 'openid' => $user->openid ] ) );
         print_r( $user );
         print_r( $cache );
     }
