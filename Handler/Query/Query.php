@@ -3,6 +3,8 @@
 namespace Handler\Query;
 
 use Util\CurlUtil as HTTP;
+use Util\JsonUtil as JSON;
+use Util\FormatUtil as FU;
 use Util\EnvironmentUtil as EU;
 use Model\User;
 use Model\Cache;
@@ -15,6 +17,8 @@ class Query
 
     public $user;
     public $cache;
+    public $fromCache = true;
+    public $errorFlag = false;
     public $args = [];
 
     function __construct( User $user )
@@ -49,20 +53,60 @@ class Query
         $args = $this->buildArgs();
         $type = $this->getType();
         $args = array_merge( $args, [ 'type' => $type, 'owner' => $this->user->openid ] );
-        $cache = Cache::getCache( $args );
 
-        print_r( $args );
-        print_r( $cache );
+        $cache = Cache::getCache( $args );
         if( $cache->id && strtotime( $cache->expire_time ) > time() )
         {
-            return $this->renderData( $cache->data );
+            $json = JSON::parse( $cache->data );
+            if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
+            return $this->renderData( $json['result'] );
         }
-        
+        try
+        {
+            $url = static::$apiURL;
+            $http = new HTTP( $url );
+            $response = $http->POST( $args );
+            $json = JSON::parse( $response );
+            if( !$json ) throw new \Exception( '服务器返回的数据出现格式错误' );
+            $errorCode = $json['errorCode']; $errorMsg = $json['errorMsg'];
+            if( $errorCode === 0 )
+            {
+                $lifeTime = static::$lifeTime;
+                if( $lifeTime )
+                {
+                    Cache::updateCache( $args, [
+                        'expire_time' => FU::getMySQLDatetime( time() + $lifeTime ),
+                        'data' => $response,
+                    ] );
+                }
+                $this->fromCache = false;
+                return $this->renderData( $json['result'] );
+            }
+            $this->errorFlag = true;
+            if( $errorCode === 10003 ) return $this->onValidateError( $errorMsg );
+            if( $cache->id )
+            {
+                $json = JSON::parse( $cache->data );
+                if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
+                return $this->renderData( $json['result'] );
+            }
+            return $this->onServerError( $errorCode, $errorMsg );
+        }
+        catch( Exception $ex )
+        {
+            $this->errorFlag = true;
+            if( $cache->id )
+            {
+                $json = JSON::parse( $cache->data );
+                if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
+                return $this->renderData( $json['result'] );
+            }
+            return $this->onServerError( 10002, $ex->getMessage() );
+        }
     }
 
     function renderData( $data )
     {
-
     }
 
     function getType()
@@ -74,12 +118,23 @@ class Query
 
     function onValidateError( $errorMsg )
     {
-
+        return $this->getRedirectSettingNews();
     }
 
-    function onServerError( $errorMsg )
+    function onServerError( $errorCode, $errorMsg )
     {
+        return [
+            $this->getNews( [ 'title' => '服务器发生错误' ] ),
+            $this->getNews( [
+                'title' => $errorMsg,
+                'image' => $this->getErrorImageURL,
+            ] ),
+        ];
+    }
 
+    function getErrorImageURL()
+    {
+        return '';
     }
 
     function getNews( array $args = [] )

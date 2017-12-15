@@ -4,7 +4,7 @@ namespace Handler\Query;
 
 class Course extends Query
 {
-    static $single = false;
+    public $today = false;
 
     function buildArgs()
     {
@@ -15,6 +15,7 @@ class Course extends Query
 
     function renderData( $data )
     {
-        return $this->getRedirectSettingNews();
+        //print_r( $data );
+        return 'hhh';
     }
 }

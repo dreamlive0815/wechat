@@ -48,6 +48,15 @@ class Model
         return $result;
     }
 
+    function delete()
+    {
+        if( $this->id ) return false;
+        self::checkDB();
+        $q = DB::$default->getQuery( static::getTableName() );
+        $result = $q->where( 'id', $this->id )->delete();
+        return $result;
+    }
+
     function toArray()
     {
         return $this->map;
@@ -57,6 +66,7 @@ class Model
     {
         $class = static::getClassName();
         if( $func == "get{$class}" ) return static::getInstance( $args[0] );
+        if( $func == "update{$class}" ) return static::updateInstance( $args[0], $args[1], $args[2] );
         return null;
     }
 
