@@ -395,7 +395,8 @@ class MySQLiQueryUtil
 
     function insert( $v, array $override = [] )
     {
-        return $this->util->exec( $this->_insert_( $v, $override ) );
+        $this->util->exec( $this->_insert_( $v, $override ) );
+        return $this->util->con->insert_id;
     }
 
     function _delete()

@@ -64,9 +64,10 @@ class Model
         $model = static::$method( $args );
         $q = DB::$default->getQuery( static::getTableName() );
 
-        if( !$model->id )
+        $model_id = $model->id;
+        if( !$model_id )
         {
-            $q->field( array_keys( $args ) )->insert( array_values( $args ) );
+            $model_id = $q->field( array_keys( $args ) )->insert( array_values( $args ) );
             $set = array_merge( $set, $createSet );
         }
         $realSet = [];
@@ -78,7 +79,8 @@ class Model
         {
             return false;
         }
-        $result = $q->set( $set )->update();
+        
+        $result = $q->where( 'id', $model_id )->set( $realSet )->update();
         return $result;
     }
 

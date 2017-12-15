@@ -24,7 +24,6 @@ class UserController extends Controller
 
     function getOpenid()
     {
-        return 'oQ4KVw14cKQ4lucVr4N8mJNY_Cro1';
         $this->setDefaultDB();
         self::startSession();
         $openid = SU::getVal( 'openid' );
