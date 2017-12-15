@@ -20,21 +20,35 @@ class Model
         if( !DB::$default ) throw new Exception( '请先初始化数据库工具' );
     }
 
-    public function __get( $key )
+    function __get( $key )
     {
         return isset( $this->map[$key] ) ? $this->map[$key] : null;
     }
 
-    public function __set( $key, $val )
+    function __set( $key, $val )
+    {
+        if( $this->update( [ $key => $val ] ) ) $this->map[$key] = $val;
+    }
+
+    function update( array $set )
     {
         if( !$this->id ) return false;
         self::checkDB();
+        $realSet = [];
+        foreach( $set as $k => $v )
+        {
+            if( $v !== null ) $realSet[$k] = $v;
+        }
+        if( !$realSet )
+        {
+            return false;
+        }
         $q = DB::$default->getQuery( static::getTableName() );
-        $q->where( 'id', $this->id )->set( [ $key => $val ] )->update();
-        $this->map[$key] = $val;
+        $result = $q->where( 'id', $this->id )->set( $realSet )->update();
+        return $result;
     }
 
-    public function toArray()
+    function toArray()
     {
         return $this->map;
     }

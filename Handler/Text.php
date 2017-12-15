@@ -6,9 +6,10 @@ class Text extends Base
 {
     static function handle()
     {
-        return self::Query( 'course' );
-        $news = static::redirectToSettingPage();
-        return $news;
+        $query = self::getQuery( 'course' );
+        $query->single(  );
+        print_r( $query );
+        return $query->run();
     }
 
     static function handleText( $text )
