@@ -4,6 +4,8 @@ namespace Handler\Query;
 
 class Course extends Query
 {
+    static $lifeTime = 3600 * 24 * 7;
+
     public $today = false;
 
     function buildArgs()
@@ -15,7 +17,14 @@ class Course extends Query
 
     function renderData( $data )
     {
-        //print_r( $data );
+        print_r( $this );
+        echo $this->getStatusText();
+        print_r( $data );
         return 'hhh';
+    }
+
+    function onValidateError( $errorMsg )
+    {
+        return $this->getRedirectSettingNews( 'edu_passwd' );
     }
 }

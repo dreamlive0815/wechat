@@ -5,6 +5,8 @@ $useDB = true;
 require( './head.php' );
 require( './wechat_head.php' );
 
+use Util\FilterUtil;
+
 $server = $app->server;
 $server->setMessageHandler( function( $message ) {
     $messageType = ucfirst( $message->MsgType );
@@ -19,6 +21,12 @@ $server->setMessageHandler( function( $message ) {
     catch( \Exception $ex )
     {
         $reply = $ex->getMessage();
+        $info = [
+            'exception' => $ex,
+            'class' => get_class( $ex ),
+            'tolog' => true,
+        ];
+        FilterUtil::applyFilter( 'exceptionHandler', $info );
     }
     return $reply;
 } );

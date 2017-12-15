@@ -17,6 +17,7 @@ class Query
 
     public $user;
     public $cache;
+    public $useCache = true;
     public $fromCache = true;
     public $errorFlag = false;
     public $args = [];
@@ -55,11 +56,10 @@ class Query
         $args = array_merge( $args, [ 'type' => $type, 'owner' => $this->user->openid ] );
 
         $cache = Cache::getCache( $args );
-        if( $cache->id && strtotime( $cache->expire_time ) > time() )
+        $this->cache = $cache;
+        if( $this->useCache && $cache->id && strtotime( $cache->expire_time ) > time() )
         {
-            $json = JSON::parse( $cache->data );
-            if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
-            return $this->renderData( $json['result'] );
+            return $this->renderCachedData();
         }
         try
         {
@@ -86,23 +86,42 @@ class Query
             if( $errorCode === 10003 ) return $this->onValidateError( $errorMsg );
             if( $cache->id )
             {
-                $json = JSON::parse( $cache->data );
-                if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
-                return $this->renderData( $json['result'] );
+                return $this->renderCachedData();
             }
             return $this->onServerError( $errorCode, $errorMsg );
         }
-        catch( Exception $ex )
+        catch( \Exception $ex )
         {
             $this->errorFlag = true;
             if( $cache->id )
             {
-                $json = JSON::parse( $cache->data );
-                if( !isset( $json['result'] ) ) throw new \Exception( '缓存数据出现格式错误' );
-                return $this->renderData( $json['result'] );
+                return $this->renderCachedData();
             }
             return $this->onServerError( 10002, $ex->getMessage() );
         }
+    }
+
+    function getStatusText()
+    {
+        $s = '';
+        if( $this->errorFlag )
+        {
+            if( $s ) $s .= "\n";
+            $s .= '服务器发生错误';
+        }
+        if( $this->fromCache )
+        {
+            if( $s ) $s .= "\n";
+            $s .= '当前为缓存数据 生成时间:' . $this->cache->update_time;
+        }
+        return $s;
+    }
+
+    function renderCachedData()
+    {
+        $json = JSON::parse( $this->cache->data );
+        if( !isset( $json['result'] ) ) return '缓存数据出现格式错误';
+        return $this->renderData( $json['result'] );
     }
 
     function renderData( $data )

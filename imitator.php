@@ -21,5 +21,5 @@ $message = '<xml>
 //oZy0Mw58RMSmyys0WR9xRp-y5v0U 测试号
 
 $curl = new CurlUtil( $url );
-$response = $curl->POST( $message );
+$response = $curl->timeout( 10000 )->POST( $message );
 echo $response;
