@@ -7,11 +7,12 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 
 class User extends Model
 {
+    static $table = 'account';
 
     static function getUserByOpenid( $openid, $arrayType = false )
     {
         self::checkDB(); 
-        $q = DB::$default->getQuery( 'account' );
+        $q = DB::$default->getQuery( static::getTableName() );
         $a = $q->where( 'openid', $openid )->limit( 1 )->get()->fir();
         if( !$a ) $a = [];
         if( $arrayType ) return $a;
@@ -22,7 +23,7 @@ class User extends Model
     static function createOrUpdateUser( $openid, array $map )
     {
         self::checkDB();
-        $q = DB::$default->getQuery( 'account' );
+        $q = DB::$default->getQuery( static::getTableName() );
         $a = $q->where( 'openid', $openid )->limit( 1 )->get()->fir();
         if( !$a )
         {

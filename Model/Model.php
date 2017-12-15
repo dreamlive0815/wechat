@@ -6,6 +6,8 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 
 class Model
 {
+    static $table;
+
     public $map = [];
 
     function __construct( array $map = [] )
@@ -26,5 +28,13 @@ class Model
     static function checkDB()
     {
         if( !DB::$default ) throw new Exception( '请先初始化数据库工具' );
+    }
+
+    static function getTableName()
+    {
+        if( static::$table ) return static::$table;
+        $class = static::class;
+        $a = explode( "\\", $class );
+        return end( $a );
     }
 }
