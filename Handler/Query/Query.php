@@ -146,7 +146,7 @@ class Query
             $this->getNews( [ 'title' => '服务器发生错误' ] ),
             $this->getNews( [
                 'title' => $errorMsg,
-                'image' => $this->getErrorImageURL,
+                'image' => $this->getErrorImageURL(),
             ] ),
         ];
     }
