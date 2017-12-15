@@ -39,6 +39,7 @@ class Model
     {
         $class = static::getClassName();
         if( $func == "get{$class}" ) return static::getInstance( $args[0] );
+        return null;
     }
 
     //args必须可以唯一确定一个模型
@@ -58,13 +59,27 @@ class Model
     //args必须可以唯一确定一个模型
     static function updateInstance( array $args, array $set, array $createSet = [] )
     {
-        $model = static::getInstance( $args );
+        self::checkDB();
+        $method = 'get' . static::getClassName();
+        $model = static::$method( $args );
+        $q = DB::$default->getQuery( static::getTableName() );
 
-        if( $model->id )
+        if( !$model->id )
         {
-            echo $q->field( array_keys( $args ) )->_insert_( $args );
-            
+            $q->field( array_keys( $args ) )->insert( array_values( $args ) );
+            $set = array_merge( $set, $createSet );
         }
+        $realSet = [];
+        foreach( $set as $k => $v )
+        {
+            if( $v !== null ) $realSet[$k] = $v;
+        }
+        if( !$realSet )
+        {
+            return false;
+        }
+        $result = $q->set( $set )->update();
+        return $result;
     }
 
     static function getTableName()

@@ -9,22 +9,17 @@ class User extends Model
 {
     static $table = 'account';
 
-    static function createOrUpdateUser( $openid, array $map )
+    static function getUser( $arg )
     {
-        self::checkDB();
-        $q = DB::$default->getQuery( static::getTableName() );
-        $a = $q->where( 'openid', $openid )->limit( 1 )->get()->fir();
-        if( !$a )
-        {
-            $q->field( [ 'openid' , 'register_time' ] )->insert( [ $openid, FU::getMySQLDatetime() ] );
-        }
+        $args = is_array( $arg ) ? $arg : [ 'openid' => $arg ];
+        return self::getInstance( $args );
+    }
 
-        $set = [];
-        foreach( $map as $k => $v )
-        {
-            if( $v !== null ) $set[$k] = $v;
-        }
+    static function updateUser( $arg, array $set )
+    {
+        $args = is_array( $arg ) ? $arg : [ 'openid' => $arg ];
         $set['update_time'] = FU::getMySQLDatetime();
-        return $q->set( $set )->update();
+        $createSet = [ 'register_time' => FU::getMySQLDatetime() ];
+        return self::updateInstance( $args, $set, $createSet );
     }
 }

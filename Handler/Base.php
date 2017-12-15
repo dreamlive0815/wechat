@@ -25,7 +25,7 @@ class Base
     {
         $type = ucfirst( $type );
         $openid = self::getOpenid();
-        $user = User::getUser( [ 'openid' => $openid ] );
+        $user = User::getUser( $openid );
         if( !$user->id ) return static::redirectToSettingPage();
 
         $classname = "\\Handler\\Query\\{$type}";
