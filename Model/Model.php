@@ -115,7 +115,8 @@ class Model
     static function getTableName()
     {
         if( static::$table ) return static::$table;
-        return static::getClassName();
+        $class = static::getClassName();
+        return lcfirst( $class );
     }
 
     static function getClassName()
