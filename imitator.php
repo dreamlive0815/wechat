@@ -8,7 +8,7 @@ use Util\CommonUtil as CU;
 $url = 'http://localhost/wechat/index.php';
 
 $text = CU::getR( 'text' );
-if( !$text ) $text = '分享3L的单曲《月齢11.3のキャンドルマジック (Getsurei 11.3 no Candle Magic)》: http://music.163.com/song/22820952/?userid=352148975 (来自@网易云音乐) download';
+if( !$text ) $text = 'http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&dbname=CJFDTEMP&filename=GXQZ201724062&uid=WEEvREcwSlJHSldRa1Fhb09jMjVzMzRpMjFYdGJuYWgrZWFhdDU4QUhiOD0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4ggI8Fm4gTkoUKaID8j8gFw!!&v=MjA1Mjc0SDliT3E0OURab1I4ZVgxTHV4WVM3RGgxVDNxVHJXTTFGckNVUkwyZVplZHBGQ3ZtV3IvQUlqWGFkTEc=';
 
 $message = "<xml>
 <ToUserName><![CDATA[gh_3e5937f3358d]]></ToUserName>

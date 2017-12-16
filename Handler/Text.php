@@ -34,6 +34,19 @@ class Text extends Base
                 'url' => $url,
             ] );
         }
+
+        $class = '\Tool\CNKI'; $tool = new $class();
+        if( $tool->hasArticleURL( $text ) )
+        {
+            $url = $tool->getArticleURL( $text );
+            $info = $tool->getArticleInfo( $url );
+            $downloadURL = $tool->getArticleDownloadURL( $info );
+            return new News( [
+                'title' => $info['filename'],
+                'description' => '点击下载',
+                'url' => $downloadURL,
+            ] );
+        }
         
         $base = strtolower( self::getCmdArg( 'base' ) );
         $base = ucfirst( $base );
