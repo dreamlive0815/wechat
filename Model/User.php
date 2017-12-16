@@ -9,23 +9,25 @@ class User extends Model
 {
     static $table = 'account';
 
-    static function wrapArg( $arg )
+    static function wrapArgs( $args )
     {
-        if( is_array( $arg ) ) return [ 'openid' => $arg['openid'] ];  
-        return [ 'openid' => strval( $arg ) ];
+        if( !is_array( $args ) ) $args = [ 'openid' => strval( $args ) ];
+        $args = array_merge( [ 'openid' => '' ], $args );
+        $realArgs = [
+            'openid' => $args['openid'],
+        ];
+        return $realArgs;
     }
 
-    static function getUser( $arg )
+    static function getUser( $args )
     {
-        $args = self::wrapArg( $arg );
-        return self::getInstance( $args );
+        return self::getInstance( self::wrapArgs( $args ) );
     }
 
-    static function updateUser( $arg, array $set )
+    static function updateUser( $args, array $set )
     {
-        $args = self::wrapArg( $arg );
         $set['update_time'] = FU::getMySQLDatetime();
         $createSet = [ 'register_time' => FU::getMySQLDatetime() ];
-        return self::updateInstance( $args, $set, $createSet );
+        return self::updateInstance( self::wrapArgs( $args ), $set, $createSet );
     }
 }

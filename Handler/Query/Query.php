@@ -12,7 +12,7 @@ use EasyWeChat\Message\News;
 
 class Query
 {
-    static $apiURL = 'https://m.zstu.edu.cn/capturer/index.php';
+    static $apiURL = 'http://m.zstu.edu.cn/capturer/index.php';
     static $lifeTime = 3600;
 
     public $user;
