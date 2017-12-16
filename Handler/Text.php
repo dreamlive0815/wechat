@@ -3,6 +3,7 @@
 namespace Handler;
 
 use EasyWeChat\Message\News;
+use Util\EnvironmentUtil as EU;
 
 class Text extends Base
 {
@@ -21,17 +22,14 @@ class Text extends Base
         if( $tool->hasSongURL( $text ) )
         {
             $id = $tool->getSongID( $text );
-            $detail_infos = $tool->getSongDetailInfo( $id );
-            $url_infos = $tool->getSongURLInfo( $id );
-
-            $detail_info = $detail_infos['songs'][0];
-            $url_info = $url_infos['data'][0];
-
-            $name = $detail_info['name'];
-            $url = $url_info['url'];
-
+            $info = $tool->getSongInfo( $id );
+            $url = $info['url'];
+            if( self::getCmdArg( 'download' ) )
+            {
+                $url = sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
+            }
             return new News( [
-                'title' => $name,
+                'title' => $info['name'],
                 'description' => '点击下载',
                 'url' => $url,
             ] );
@@ -61,7 +59,7 @@ class Text extends Base
     {
         $args = [];
         $text = trim( $text );
-        $text = substr( $text, 0, 64 );
+        $text = substr( $text, 0, 400 );
         $pairs = explode( ' ', $text );
         $base = reset( $pairs );
         array_shift( $pairs );

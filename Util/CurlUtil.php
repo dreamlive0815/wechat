@@ -163,6 +163,12 @@ class CurlUtil
         return $this;
     }
 
+    function ipV4()
+    {
+        $this->opt( CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+        return $this;
+    }
+
     function getResponse()
     {
         $ch = &$this->ch;
@@ -209,6 +215,11 @@ class CurlUtil
             CURLOPT_POSTFIELDS => $args,
         ));
         return $this->getResponse();
+    }
+
+    function size()
+    {
+        return curl_getinfo( $this->ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD );
     }
 
     function __toString()

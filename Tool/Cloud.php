@@ -81,16 +81,21 @@ class Cloud extends Tool
         return $json;
     }
 
+    static function getIDArray( $ids )
+    {
+        $a = [];
+        if( is_array( $ids ) )
+            foreach( $ids as $id ) $a[] = intval( $id );
+        else
+            $a[] = intval( $ids );
+        return $a;
+    }
+
     static function getSongURLArgs( $ids )
     {
-        $_ids = [];
-        if( is_array( $ids ) )
-            foreach( $ids as $id ) $_ids[] = intval( $id );
-        else
-            $_ids[] = intval( $ids );
-        
+        $ids = self::getIDArray( $ids );
         return [
-            'ids' => $_ids,
+            'ids' => $ids,
             'br' => 128000,
             'csrf_token' => '',
         ];
@@ -117,7 +122,24 @@ class Cloud extends Tool
         $json = self::callAPI( '/weapi/v3/song/detail?csrf_token=', self::getSongDetailArgs( $id ) );
         if( !isset( $json['songs'] ) || empty( $json['songs'] ) ) throw new \Exception( '无法获取歌曲信息' );
         return $json;
-    } 
+    }
+
+    static function getSongInfo( $id )
+    {
+        $detail_infos = self::getSongDetailInfo( $id );
+        $url_infos = self::getSongURLInfo( $id );
+
+        $detail_info = $detail_infos['songs'][0];
+        $url_info = $url_infos['data'][0];
+
+        return [
+            'name' => $detail_info['name'],
+            'url' => $url_info['url'],
+
+            'detail_info' => $detail_info,
+            'url_info' => $url_info,
+        ];
+    }
 
     static function getRandString( $length )
     {
