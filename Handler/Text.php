@@ -40,7 +40,9 @@ class Text extends Base
         switch( $base )
         {
             case 'Course':
-                $query = self::getQuery( 'Course' );
+            case 'Coursebeta':
+                if( $base ) $base = 'CourseBeta';
+                $query = self::getQuery( $base );
                 if( self::getCmdArg( 'today' ) ) $query->today = true;
                 if( self::getCmdArg( 'nocache' ) ) $query->useCache = false;
                 $year = self::getCmdArg( 'year' );

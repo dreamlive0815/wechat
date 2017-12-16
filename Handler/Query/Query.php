@@ -14,6 +14,7 @@ class Query
 {
     static $apiURL = 'http://m.zstu.edu.cn/capturer/index.php';
     static $lifeTime = 3600;
+    static $timeout = 4000;
 
     public $user;
     public $cache;
@@ -67,7 +68,7 @@ class Query
         {
             $url = static::$apiURL;
             $http = new HTTP( $url );
-            $response = $http->POST( $args );
+            $response = $http->timeout( static::$timeout )->POST( $args );
             $json = JSON::parse( $response );
             if( !$json ) throw new \Exception( '服务器返回的数据出现格式错误' );
             $errorCode = $json['errorCode']; $errorMsg = $json['errorMsg'];
