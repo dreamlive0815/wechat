@@ -26,7 +26,7 @@ class Text extends Base
             $url = $info['url'];
             if( self::getCmdArg( 'download' ) )
             {
-                $url = sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
+                return sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
             }
             return new News( [
                 'title' => $info['name'],

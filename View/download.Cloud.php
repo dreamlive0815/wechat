@@ -13,8 +13,8 @@ $info = Cloud::getSongInfo( $id );
 $url = $info['url'];
 $name = $info['name'] . '.mp3';
 
-$response = file_get_contents( $url );
-/*
+//$response = file_get_contents( $url );
+
 $max_time = ini_get( 'max_execution_time' );
 $max_time = intval( $max_time );
 --$max_time;
@@ -22,8 +22,7 @@ $max_time *= 1000;
 
 $http = new HTTP( $url );
 $response = $http->timeout( $max_time )->ipV4()->GET();
-HU::length( $http->size() );
 HU::filename( $name );
-*/
-header( 'Content-Disposition: attachment; filename=' . $name );
+HU::length( $http->size() );
+
 echo $response;
