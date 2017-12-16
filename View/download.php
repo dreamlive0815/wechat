@@ -1,7 +1,7 @@
 <?php
 
-require( 'head.php' );
-
+require( '../head.php' );
+/*
 $info = [];
 $detail = Cloud::getSongDetailInfo( $id );
 $detail = $detail['songs'][0];
@@ -16,3 +16,4 @@ $content = file_get_contents( $info['url'] );
 header( "Content-Disposition: attachment; filename={$filename}" );
 
 echo $content;
+*/

@@ -2,6 +2,8 @@
 
 namespace Handler;
 
+use EasyWeChat\Message\News;
+
 class Text extends Base
 {
     static function handle()
@@ -14,6 +16,27 @@ class Text extends Base
     static function handleText( $text )
     {
         self::$cmdArgs = self::parseCmdArgs( $text );
+
+        $class = '\Tool\Cloud'; $tool = new $class();
+        if( $tool->hasSongURL( $text ) )
+        {
+            $id = $tool->getSongID( $text );
+            $detail_infos = $tool->getSongDetailInfo( $id );
+            $url_infos = $tool->getSongURLInfo( $id );
+
+            $detail_info = $detail_infos['songs'][0];
+            $url_info = $url_infos['data'][0];
+
+            $name = $detail_info['name'];
+            $url = $url_info['url'];
+
+            return new News( [
+                'title' => $name,
+                'description' => '点击下载',
+                'url' => $url,
+            ] );
+        }
+        
         $base = strtolower( self::getCmdArg( 'base' ) );
         $base = ucfirst( $base );
         switch( $base )

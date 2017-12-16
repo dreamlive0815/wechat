@@ -1,9 +1,11 @@
 <?php
 
-use Util\CommonUtil;
-use Util\CurlUtil;
+namespace Tool;
 
-class Cloud
+use Util\CommonUtil;
+use Util\CurlUtil as HTTP;
+
+class Cloud extends Tool
 {
     static $args = [
         '010001',
@@ -14,18 +16,19 @@ class Cloud
 
     static $base = 'http://music.163.com';
 
-    static function getRandString( $length )
+    static function hasSongURL( $text )
     {
-        $length = abs( intval( $length) );
-        $pattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $lengthOfPattern = strlen( $pattern );
-        $s = '';
-        for( $i = 0; $i < $length; ++$i )
-        {
-            $index = mt_rand( 0, $lengthOfPattern - 1 );
-            $s .= $pattern[$index];
-        }
-        return $s;
+        return (boolean) preg_match( '/https?:\/\/music\.163\.com\/song/', $text );
+    }
+
+    static function getSongID( $text )
+    {
+        if( !self::hasSongURL( $text ) ) return null;
+        if( !preg_match( '/https?:\/\/[^\s\x7f-\xff]+/', $text, $match ) ) return null;
+        $url = $match[0];
+        if( preg_match( '/song\/(\d+)\//', $url, $match ) ) return intval( $match[1] );
+        $args = CommonUtil::getURLArgs( $url );
+        return isset( $args['id'] ) ? intval( $args['id'] ) : null;
     }
 
     static function AESEncrypt( $plainText, $key, $iv )
@@ -66,7 +69,7 @@ class Cloud
 
     static function callAPI( $url, $args )
     {
-        $curl = new CurlUtil( static::$base . $url );
+        $curl = new HTTP( static::$base . $url );
         $curl->opt( CURLOPT_HTTPHEADER, [
             'Content-Type: application/x-www-form-urlencoded',
         ] )->referer( static::$base );
@@ -74,7 +77,7 @@ class Cloud
         $postRaw = self::encryptSongArgs( $args );
         $response = $curl->POST( $postRaw );
         $json = json_decode( $response, true );
-        if( empty( $json ) ) throw new Exception( '数据出错' );
+        if( empty( $json ) ) throw new \Exception( '数据出错' );
         return $json;
     }
 
@@ -96,7 +99,7 @@ class Cloud
     static function getSongURLInfo( $id )
     {
         $json = self::callAPI( '/weapi/song/enhance/player/url?csrf_token=', self::getSongURLArgs( $id ) );
-        if( !isset( $json['data'] ) || empty( $json['data'] ) ) throw new Exception( '无法获取歌曲URL' );
+        if( !isset( $json['data'] ) || empty( $json['data'] ) ) throw new \Exception( '无法获取歌曲URL' );
         return $json;
     }
 
@@ -112,14 +115,21 @@ class Cloud
     static function getSongDetailInfo( $id )
     {
         $json = self::callAPI( '/weapi/v3/song/detail?csrf_token=', self::getSongDetailArgs( $id ) );
-        if( !isset( $json['songs'] ) || empty( $json['songs'] ) ) throw new Exception( '无法获取歌曲信息' );
+        if( !isset( $json['songs'] ) || empty( $json['songs'] ) ) throw new \Exception( '无法获取歌曲信息' );
         return $json;
-    }
+    } 
 
-    static function getSongID( $url )
+    static function getRandString( $length )
     {
-        if( preg_match( '/song\/(\d+)\//', $url, $match ) ) return intval( $match[1] );
-        $args = CommonUtil::getURLArgs( $url );
-        return isset( $args['id'] ) ? intval( $args['id'] ) : intval( $url );
+        $length = abs( intval( $length) );
+        $pattern = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $lengthOfPattern = strlen( $pattern );
+        $s = '';
+        for( $i = 0; $i < $length; ++$i )
+        {
+            $index = mt_rand( 0, $lengthOfPattern - 1 );
+            $s .= $pattern[$index];
+        }
+        return $s;
     }
 }
