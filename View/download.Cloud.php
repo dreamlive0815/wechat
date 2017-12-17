@@ -13,6 +13,7 @@ $info = Cloud::getSongInfo( $id );
 $url = $info['url'];
 $name = $info['name'] . '.mp3';
 
+if( !$url ) die( '找不到歌曲下载链接,歌曲可能已经被下架' );
 //$response = file_get_contents( $url );
 
 $max_time = ini_get( 'max_execution_time' );
