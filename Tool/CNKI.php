@@ -5,6 +5,7 @@ namespace Tool;
 use Util\CurlUtil as HTTP;
 use Util\JsonUtil as JSON;
 use Util\EnvironmentUtil as EU;
+use Config\Config;
 
 class CNKI extends Tool
 {   
@@ -38,7 +39,7 @@ class CNKI extends Tool
 
     static function getArticleDownloadURL( $info )
     {
-        $url = EU::getServerBaseURL() . sprintf( '/wechat/View/download.CNKI.php?url=%s&filename=%s', base64_encode( $info['url'] ), $info['filename'] );
+        $url = EU::getServerBaseURL() . sprintf( '/%s/View/download.CNKI.php?url=%s&filename=%s', Config::basename, base64_encode( $info['url'] ), $info['filename'] );
         //$url = sprintf( '%s?docurl=%s&filename=%s', self::$apiURL, urlencode( $info['docurl'] ), $info['filename'] );
         return $url;
     }

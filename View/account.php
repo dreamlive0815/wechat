@@ -8,6 +8,7 @@ use Util\CommonUtil as CU;
 use Util\ViewUtil as VU;
 use Util\Session\SessionUtil as SU;
 use Control\UserController as US;
+use Config\Config;
 
 US::startSession();
 
@@ -82,7 +83,7 @@ foreach( $real_fields as $k => $v )
     }
 
     callAPI({
-        url : '/wechat/api/User/getUserInfo',
+        url : '/<?=Config::basename?>/api/User/getUserInfo',
         success : function(data){
             var fs = <?=$fs_str?>;
             for(var i=0;i<fs.length;++i)
@@ -99,7 +100,7 @@ foreach( $real_fields as $k => $v )
         event.preventDefault();
 
         callAPI({
-            url : '/wechat/api/User/updateUserInfo',
+            url : '/<?=Config::basename?>/api/User/updateUserInfo',
             data : $('#frm').serialize(),
             success : function(data){
                 showModal('设置成功');

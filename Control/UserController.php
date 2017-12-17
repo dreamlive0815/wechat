@@ -58,6 +58,8 @@ class UserController extends Controller
 
     function testAction()
     {
-        
+        $conf = Config::get( 'Wechat' );
+        echo $conf::basename;
+        //print_r( $conf );
     }
 }

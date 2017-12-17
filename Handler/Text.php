@@ -4,6 +4,7 @@ namespace Handler;
 
 use EasyWeChat\Message\News;
 use Util\EnvironmentUtil as EU;
+use Config\Config;
 
 class Text extends Base
 {
@@ -23,7 +24,7 @@ class Text extends Base
         {
             $id = $tool->getSongID( $text );
             $info = $tool->getSongInfo( $id );
-            $url = sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
+            $url = sprintf( '%s/%s/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), Config::basename,$id );
             return new News( [
                 'title' => $info['name'],
                 'description' => '点击下载',
@@ -50,10 +51,9 @@ class Text extends Base
         {
             case 'Course':
             case 'Coursebeta':
-                if( $base ) $base = 'CourseBeta';
+                if( $base == 'Coursebeta' ) $base = 'CourseBeta';
                 $query = self::getQuery( $base );
                 if( self::getCmdArg( 'today' ) ) $query->today = true;
-                if( self::getCmdArg( 'nocache' ) ) $query->useCache = false;
                 $year = self::getCmdArg( 'year' );
                 $semester = self::getCmdArg( 'semester' );
                 if( preg_match( '/\d{4}-\d{4}/', $year ) && preg_match( '/\d/', $semester ) )
@@ -62,6 +62,14 @@ class Text extends Base
                     $query->semester = $semester;
                 }
                 return $query->run();
+
+            case 'Setting':
+                $query = self::getQuery( 'Query' );
+                return $query->getRedirectSettingNews();
+
+            case 'Error':
+                $query = self::getQuery( 'Query' );
+                return $query->getErrorImageURL();
                 
         }
     }

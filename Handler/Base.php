@@ -35,6 +35,8 @@ class Base
         $user->update_time = FU::getMySQLDatetime();
 
         $classname = "\\Handler\\Query\\{$type}";
-        return new $classname( $user );
+        $instance = new $classname( $user );
+        if( self::getCmdArg( 'nocache' ) ) $instance->useCache = false;
+        return $instance;
     }
 }

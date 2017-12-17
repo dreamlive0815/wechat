@@ -22,7 +22,7 @@ class Wechat extends Config
 
         'oauth' => [
             'scopes'   => [ 'snsapi_userinfo' ],
-            'callback' => '/wechat/oauth_callback.php',
+            'callback' => '/' . self::basename . '/oauth_callback.php',
         ],
 
         'guzzle' => [

@@ -4,6 +4,8 @@ namespace Config;
 
 class Config
 {
+    const basename = 'wechat';
+
     public $config;
 
     static function get( $type )

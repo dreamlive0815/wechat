@@ -9,6 +9,7 @@ use Util\EnvironmentUtil as EU;
 use Model\User;
 use Model\Cache;
 use EasyWeChat\Message\News;
+use Config\Config;
 
 class Query
 {
@@ -156,7 +157,7 @@ class Query
     {
         $imgCnt = 5;
         $index = mt_rand( 0, $imgCnt - 1 );
-        $url = EU::getServerBaseURL() . "/wechat/Resource/Image/Fail/{$index}.jpg";
+        $url = EU::getServerBaseURL() . sprintf( '/%s/Resource/Image/Fail/%s.jpg', Config::basename, $index );
         return $url;
     }
 
@@ -169,7 +170,7 @@ class Query
 
     function getRedirectSettingNews( $filter = null, $title = '账号信息有误', $description = '点击这里设置账号信息' )
     {
-        $url = EU::getServerBaseURL() . '/wechat/View/account.php';
+        $url = EU::getServerBaseURL() . sprintf( '/%s/View/account.php', Config::basename );
         if( $filter ) $url .= "?filter={$filter}";
         return $this->getNews( [ 
             'title' => $title,
