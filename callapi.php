@@ -1,5 +1,6 @@
 <?php
 
+/*
 $config_common = require( 'config_common.php' );
 $config_wechat = require( 'config_wechat_beta.php' );
 
@@ -22,3 +23,4 @@ catch(\Exception $ex)
 {
     print_r( $ex->getMessage() );
 }
+*/
