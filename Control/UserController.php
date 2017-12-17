@@ -10,31 +10,11 @@ use Config\Config;
 
 class UserController extends Controller
 {
-    static function startSession()
-    {
-        SU::start();
-    }
-
-    function setDefaultDB()
-    {
-        if( DB::$default ) return;
-        $conf = Config::get( 'DB' );
-        $instance = DB::getInstance( $conf->host, $conf->username, $conf->password, $conf->table );
-        DB::setDefault( $instance );
-    }
-
-    function getOpenid()
-    {
-        $this->setDefaultDB();
-        self::startSession();
-        $openid = SU::getVal( 'openid' );
-        if( !$openid ) throw new \Exception( '无法获取用户的openid' ); 
-        return $openid;
-    }
 
     function getUserInfoAction()
     {
-        $this->setDefaultDB();
+        $this->setDefaultDB();//一定要在startSession前初始化数据库
+        self::startSession();
         $openid = $this->getOpenid();
         $user = US::getUser( $openid );
         if( !$user->id ) return $this->output( 10003, '用户不存在' );
@@ -44,7 +24,8 @@ class UserController extends Controller
 
     function updateUserInfoAction()
     {
-        $this->setDefaultDB();
+        $this->setDefaultDB();//一定要在startSession前初始化数据库
+        self::startSession();
         $openid = $this->getOpenid();
         $t1 = [ 'sid', 'idcard', 'edu_passwd', 'ecard_passwd', 'nic_passwd', 'lib_passwd' ];
         $t2 = [];
@@ -59,7 +40,6 @@ class UserController extends Controller
     function testAction()
     {
         $conf = Config::get( 'Wechat' );
-        echo $conf::basename;
         //print_r( $conf );
     }
 }
