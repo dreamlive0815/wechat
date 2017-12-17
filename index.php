@@ -6,6 +6,7 @@ require( './head.php' );
 require( './wechat_head.php' );
 
 use Util\FilterUtil;
+use Util\Log\LogUtil;
 
 $server = $app->server;
 $server->setMessageHandler( function( $message ) {
@@ -20,13 +21,9 @@ $server->setMessageHandler( function( $message ) {
     }
     catch( \Exception $ex )
     {
-        $reply = $ex->getMessage();
-        $info = [
-            'exception' => $ex,
-            'class' => get_class( $ex ),
-            'tolog' => true,
-        ];
-        FilterUtil::applyFilter( 'exceptionHandler', $info );
+        $reply = $ex->getMessage() . sprintf( '[%s]', $ex->getCode() );
+        $exceptionLogger = LogUtil::getInstance( 'exceptionLogger' );
+        if( $exceptionLogger ) $exceptionLogger->log( $ex->__toString() );
     }
     return $reply;
 } );
