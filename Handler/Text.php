@@ -23,11 +23,7 @@ class Text extends Base
         {
             $id = $tool->getSongID( $text );
             $info = $tool->getSongInfo( $id );
-            $url = $info['url'];
-            if( self::getCmdArg( 'download' ) )
-            {
-                return sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
-            }
+            $url = sprintf( '%s/wechat/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), $id );
             return new News( [
                 'title' => $info['name'],
                 'description' => '点击下载',

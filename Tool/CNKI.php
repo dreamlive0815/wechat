@@ -4,6 +4,7 @@ namespace Tool;
 
 use Util\CurlUtil as HTTP;
 use Util\JsonUtil as JSON;
+use Util\EnvironmentUtil as EU;
 
 class CNKI extends Tool
 {   
@@ -12,12 +13,12 @@ class CNKI extends Tool
 
     static function hasArticleURL( $text )
     {
-        return (boolean) preg_match( '/https?:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx/i', $text );
+        return (boolean) preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx/i', $text );
     }
 
     static function getArticleURL( $text )
     {
-        if( !preg_match( '/https?:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx[^\s\x7f-\xff]*/i', $text, $match ) ) return null;
+        if( !preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx[^\s\x7f-\xff]*/i', $text, $match ) ) return null;
         return $match[0];
     }
 
@@ -34,10 +35,10 @@ class CNKI extends Tool
         return $json['result'];
     }
 
-
     static function getArticleDownloadURL( $info )
     {
-        $url = sprintf( '%s?docurl=%s&filename=%s', self::$apiURL, urlencode( $info['docurl'] ), $info['filename'] );
+        $url = EU::getServerBaseURL() . sprintf( '/wechat/View/download.CNKI.php?docurl=%s&filename=%s', urlencode( $info['docurl'] ), $info['filename'] );
+        //$url = sprintf( '%s?docurl=%s&filename=%s', self::$apiURL, urlencode( $info['docurl'] ), $info['filename'] );
         return $url;
     }
 }

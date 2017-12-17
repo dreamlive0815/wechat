@@ -22,7 +22,8 @@ $max_time *= 1000;
 
 $http = new HTTP( $url );
 $response = $http->timeout( $max_time )->ipV4()->GET();
-HU::filename( $name );
+HU::type( 'mp3' );
+HU::filename( $name, false );
 HU::length( $http->size() );
 
 echo $response;
