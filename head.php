@@ -2,12 +2,13 @@
 
 $baseDir = __DIR__;
 
-require( $baseDir . '/autoload.php' );
+require_once( $baseDir . '/autoload.php' );
 
 use Util\ErrorUtil as EU;
 use Util\FilterUtil as FU;
 use Util\Log\LogUtil as LU;
 use Util\MySQLi\MySQLiUtilPool as DB;
+use Config\Config;
 
 try
 {
@@ -28,7 +29,7 @@ FU::addFilter( 'exceptionHandler', function( $info ) {
 
 if( isset( $useDB ) && $useDB )
 {
-    $config = require( $baseDir . '/config_db.php' );
-    $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
+    $conf = Config::get( 'DB' );
+    $instance = DB::getInstance( $conf->host, $conf->username, $conf->password, $conf->table );
     DB::setDefault( $instance );
 }

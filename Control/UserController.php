@@ -6,6 +6,7 @@ use Util\CommonUtil as CU;
 use Util\MySQLi\MySQLiUtilPool as DB;
 use Util\Session\SessionUtil as SU;
 use Model\User as US;
+use Config\Config;
 
 class UserController extends Controller
 {
@@ -17,8 +18,8 @@ class UserController extends Controller
     function setDefaultDB()
     {
         if( DB::$default ) return;
-        $config = require( 'config_db.php' );
-        $instance = DB::getInstance( $config['host'], $config['username'], $config['password'], $config['table'] );
+        $conf = Config::get( 'DB' );
+        $instance = DB::getInstance( $conf->host, $conf->username, $conf->password, $conf->table );
         DB::setDefault( $instance );
     }
 

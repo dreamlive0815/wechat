@@ -2,11 +2,15 @@
 
 $baseDir = __DIR__;
 
-$config_common = require( $baseDir . '/config_common.php' );
-$config_wechat = require( $baseDir . '/config_wechat_beta.php' );
+require_once( $baseDir . '/autoload.php' );
 
-$wechatSDKDir = $config_common['wechatSDKDir'];
+use Config\Config;
+
+$confCommon = Config::get( 'Common' );
+$confWechat = Config::get( 'Wechat' );
+
+$wechatSDKDir = $confCommon->wechatSDKDir;
 require( $wechatSDKDir . '/vendor/autoload.php' );
 
 use EasyWeChat\Foundation\Application;
-$app = new Application( $config_wechat );
+$app = new Application( $confWechat->toArray() );
