@@ -32,12 +32,13 @@ class CNKI extends Tool
         $json = JSON::parse( $response );
         if( !$json ) throw new \Exception( '数据出错' );
         if( $json['errorCode'] ) throw new \Exception( '远程服务器错误:' . $json['errorMsg'] );
-        return $json['result'];
+        $info = $json['result']; $info['url'] = $url;
+        return $info;
     }
 
     static function getArticleDownloadURL( $info )
     {
-        $url = EU::getServerBaseURL() . sprintf( '/wechat/View/download.CNKI.php?docurl=%s&filename=%s', urlencode( $info['docurl'] ), $info['filename'] );
+        $url = EU::getServerBaseURL() . sprintf( '/wechat/View/download.CNKI.php?url=%s&filename=%s', base64_encode( $info['url'] ), $info['filename'] );
         //$url = sprintf( '%s?docurl=%s&filename=%s', self::$apiURL, urlencode( $info['docurl'] ), $info['filename'] );
         return $url;
     }

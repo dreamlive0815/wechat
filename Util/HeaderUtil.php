@@ -5,6 +5,7 @@ namespace Util;
 class HeaderUtil
 {
     static $contentTypes = [
+        'bin' => 'application/octet-stream',
         'json' => 'application/json',
         'mp3' => 'audio/mp3',
         'pdf' => 'application/pdf',
