@@ -7,6 +7,7 @@ require( './wechat_head.php' );
 
 use Util\FilterUtil;
 use Util\Log\LogUtil;
+use Handler\Base;
 
 $server = $app->server;
 $server->setMessageHandler( function( $message ) {
@@ -21,7 +22,9 @@ $server->setMessageHandler( function( $message ) {
     }
     catch( \Exception $ex )
     {
-        $reply = $ex->getMessage() . sprintf( '[%s]', $ex->getCode() );
+        $query = Base::getQuery( 'Query' );
+        $text = $ex->getMessage() . sprintf( '[%s]', $ex->getCode() );
+        $reply = $query->onServerError( $ex->getCode(), $text );
         $exceptionLogger = LogUtil::getInstance( 'exceptionLogger' );
         if( $exceptionLogger ) $exceptionLogger->log( $ex->__toString() );
     }
