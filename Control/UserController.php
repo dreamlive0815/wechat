@@ -3,8 +3,6 @@
 namespace Control;
 
 use Util\CommonUtil as CU;
-use Util\MySQLi\MySQLiUtilPool as DB;
-use Util\Session\SessionUtil as SU;
 use Model\User as US;
 use Config\Config;
 
@@ -13,8 +11,6 @@ class UserController extends Controller
 
     function getUserInfoAction()
     {
-        $this->setDefaultDB();//一定要在startSession前初始化数据库
-        self::startSession();
         $openid = $this->getOpenid();
         $user = US::getUser( $openid );
         if( !$user->id ) return $this->output( 10003, '用户不存在' );
@@ -24,8 +20,6 @@ class UserController extends Controller
 
     function updateUserInfoAction()
     {
-        $this->setDefaultDB();//一定要在startSession前初始化数据库
-        self::startSession();
         $openid = $this->getOpenid();
         $t1 = [ 'sid', 'idcard', 'edu_passwd', 'ecard_passwd', 'nic_passwd', 'lib_passwd' ];
         $t2 = [];

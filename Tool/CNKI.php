@@ -29,7 +29,7 @@ class CNKI extends Tool
             'url' => $url,
         ];
         $http = new HTTP( self::$apiURL );
-        $response = $http->POST( $args );
+        $response = $http->timeout( 4000 )->POST( $args );
         $json = JSON::parse( $response );
         if( !$json ) throw new \Exception( '数据出错' );
         if( $json['errorCode'] ) throw new \Exception( '远程服务器错误:' . $json['errorMsg'] );

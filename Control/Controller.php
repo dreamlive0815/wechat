@@ -23,6 +23,12 @@ class Controller
         SU::start();
     }
 
+    function __construct()
+    {
+        $this->setDefaultDB();//一定要在startSession前初始化数据库
+        self::startSession();
+    }
+
     function setDefaultDB()
     {
         if( DB::$default ) return;

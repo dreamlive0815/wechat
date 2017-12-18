@@ -65,7 +65,7 @@ class Text extends Base
 
             case 'Setting':
                 $query = self::getQuery( 'Query' );
-                return $query->getRedirectSettingNews();
+                return $query->getRedirectSettingNews( null, '账号信息设置页面' );
 
             case 'Error':
                 $query = self::getQuery( 'Query' );

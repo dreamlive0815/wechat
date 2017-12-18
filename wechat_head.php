@@ -14,3 +14,4 @@ require( $wechatSDKDir . '/vendor/autoload.php' );
 
 use EasyWeChat\Foundation\Application;
 $app = new Application( $confWechat->toArray() );
+$GLOBALS['app'] = $app;
