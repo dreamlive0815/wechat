@@ -30,4 +30,10 @@ class User extends Model
         $createSet = [ 'register_time' => FU::getMySQLDatetime() ];
         return self::updateInstance( self::wrapArgs( $args ), $set, $createSet );
     }
+
+    function update( array $set )
+    {
+        $set['update_time'] = FU::getMySQLDatetime();
+        return parent::update( $set );
+    }
 }

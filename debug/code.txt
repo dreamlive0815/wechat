@@ -10,7 +10,7 @@ CREATE TABLE `easywechat`.`account` (
     `lib_passwd` VARCHAR(16),
     `register_time` DATETIME,
     `update_time` DATETIME,
-    `follow` BOOLEAN DEFAULT '0',
+    `follow` BOOLEAN DEFAULT '1',
     PRIMARY KEY (`id`), 
     UNIQUE (`openid`)
 ) ENGINE = InnoDB;

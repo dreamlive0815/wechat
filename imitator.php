@@ -14,9 +14,9 @@ $message = "<xml>
 <ToUserName><![CDATA[gh_3e5937f3358d]]></ToUserName>
 <FromUserName><![CDATA[oQ4KVw14cKQ4lucVr4N8mJNY_Cro]]></FromUserName>
 <CreateTime>1467085572</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
+<MsgType><![CDATA[event]]></MsgType>
 <Event><![CDATA[CLICK]]></Event>
-<EventKey><![CDATA[Exam]]></EventKey>
+<EventKey><![CDATA[Course_today]]></EventKey>
 <Content><![CDATA[{$text}]]></Content>
 <MsgId>6301084552610610382</MsgId>
 </xml>
