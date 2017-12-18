@@ -1,7 +1,7 @@
 CREATE TABLE `easywechat`.`account` ( 
     `id` INT NOT NULL AUTO_INCREMENT,
     `openid` VARCHAR(32),
-    `usertype` INT DEFAULT '0' COMMENT '0 本科生',
+    `usertype` INT DEFAULT '1' COMMENT '1 本科生',
     `sid` VARCHAR(16),
     `idcard` VARCHAR(8) COMMENT '身份证后六位',
     `edu_passwd` VARCHAR(32), 
