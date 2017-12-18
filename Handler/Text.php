@@ -47,21 +47,9 @@ class Text extends Base
         
         $base = strtolower( self::getCmdArg( 'base' ) );
         $base = ucfirst( $base );
+        if( self::isQuery( $base ) ) return self::runQuery( $base );
         switch( $base )
         {
-            case 'Course':
-            case 'Coursebeta':
-                if( $base == 'Coursebeta' ) $base = 'CourseBeta';
-                $query = self::getQuery( $base );
-                if( self::getCmdArg( 'today' ) ) $query->today = true;
-                $year = self::getCmdArg( 'year' );
-                $semester = self::getCmdArg( 'semester' );
-                if( preg_match( '/\d{4}-\d{4}/', $year ) && preg_match( '/\d/', $semester ) )
-                {
-                    $query->year = $year;
-                    $query->semester = $semester;
-                }
-                return $query->run();
 
             case 'Setting':
                 $query = self::getQuery( 'Query' );
@@ -72,6 +60,31 @@ class Text extends Base
                 return $query->getErrorImageURL();
                 
         }
+    }
+
+    static function isQuery( $text )
+    {
+        $list = [
+            'Course', 'Coursebeta',
+            'Score', //'Scorebeta',
+        ];
+        return in_array( $text, $list );
+    }
+
+    static function runQuery( $text )
+    {
+        if( $text == 'Coursebeta' ) $text = 'CourseBeta';
+        if( $text == 'Scorebeta' ) $text = 'ScoreBeta';
+        $query = self::getQuery( $text );
+        if( self::getCmdArg( 'today' ) ) $query->today = true;
+        $year = self::getCmdArg( 'year' );
+        $semester = self::getCmdArg( 'semester' );
+        if( preg_match( '/\d{4}-\d{4}/', $year ) && preg_match( '/\d/', $semester ) )
+        {
+            $query->year = $year;
+            $query->semester = $semester;
+        }
+        return $query->run();
     }
 
     static function parseCmdArgs( $text )
