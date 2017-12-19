@@ -90,6 +90,7 @@ class Text extends Base
         $list = [
             'Course', 'Coursebeta',
             'Score', 'Scorebeta',
+            'Ecard',
         ];
         return in_array( $text, $list );
     }
@@ -107,6 +108,13 @@ class Text extends Base
         {
             $query->year = $year;
             $query->semester = $semester;
+        }
+        $startDate = self::getCmdArg( 'startdate' );
+        $endDate = self::getCmdArg( 'enddate' );
+        if( preg_match( '/\d{4}-\d{2}-\d{2}/', $startDate ) && preg_match( '/\d{4}-\d{2}-\d{2}/', $endDate ) )
+        {
+            $query->startDate = $startDate;
+            $query->endDate = $endDate;
         }
         return $query->run();
     }

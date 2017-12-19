@@ -57,16 +57,16 @@ class WechatController extends Controller
 
     function addNewsReplyAction()
     {
+        $this->validate();
+        
+        $conf = Config::get( 'NewsReply' );
         $key = 'Touhou';
-        $newsArray = [
-            new News( [ 
-                'title' => '东方', 
-            ] ),
-            new News( [
-                'title' => '东方Project',
-            ] )
-        ];
-        Reply::updateReply( $key, [ 'type' => 'news', 'data' => addslashes( serialize( $newsArray ) ) ] );
+        $newsArray = [];
+        foreach( $conf->newsArray as $news )
+        {
+            $newsArray[] = new News( $news );
+        }
+        Reply::updateReply( $conf->key, [ 'type' => 'news', 'data' => addslashes( serialize( $newsArray ) ) ] );
         return $this->output();
     }
 }
