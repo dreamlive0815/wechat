@@ -99,6 +99,8 @@ class Text extends Base
             'Score', 'Scorebeta',
             'Ecard',
             'Exam',
+            'Net',
+            'Borrow',
         ];
         return in_array( $text, $list );
     }
