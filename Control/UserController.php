@@ -51,6 +51,7 @@ class UserController extends Controller
             $s = JSON::stringify( $json, true );
             return $this->output( 0, '', $s );
         }
+        return $this->output( 10002, '缓存数据格式出错' );
     }
 
     function testAction()
