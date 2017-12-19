@@ -29,7 +29,7 @@ class Text extends Base
         {
             $id = $tool->getSongID( $text );
             $info = $tool->getSongInfo( $id );
-            $url = sprintf( '%s/%s/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), Config::basename,$id );
+            $url = sprintf( '%s/%s/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), Config::basename, $id );
             return new News( [
                 'title' => $info['name'],
                 'description' => '点击下载',
@@ -72,13 +72,7 @@ class Text extends Base
                 }
                 $type = ucfirst( $type );
                 if( !self::isQuery( $type ) ) return '';
-                $query = self::getQuery( self::renderQueryName( $type ) );
-                $args = array_merge( [ 'owner' => self::getOpenid(), 'type' => $query->getType() ] , $query->buildArgs() );
-                $cache = \Model\Cache::getCache( $args );
-                if( !$cache->id ) return '';
-                $json = JSON::parse( $cache->data );
-                if( $json ) return JSON::stringify( $json, true );
-                return '';
+                return sprintf( '%s/%s/api/User/getCache?type=%s', EU::getServerBaseURL(), Config::basename, $type );
 
             case 'Clearcache':
                 $q = DB::$default->getQuery( 'cache' );

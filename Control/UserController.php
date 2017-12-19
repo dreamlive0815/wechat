@@ -3,7 +3,10 @@
 namespace Control;
 
 use Util\CommonUtil as CU;
+use Util\JsonUtil as JSON;
+use Handler\Text;
 use Model\User as US;
+use Model\Cache;
 use Config\Config;
 
 class UserController extends Controller
@@ -31,9 +34,29 @@ class UserController extends Controller
         return $this->output( 0, '', null );
     }
 
+    function getCacheAction()
+    {
+        $openid = $this->getOpenid();
+        $type = CU::getR( 'type' );
+        $type = ucfirst( strtolower( $type ) );
+        if( !Text::isQuery( $type ) ) return;
+        $message = new \stdClass(); $message->FromUserName = $openid; Text::$message = $message;
+        $query = Text::getQuery( Text::renderQueryName( $type ) );
+        $args = array_merge( [ 'owner' => $openid, 'type' => $query->getType() ], $query->buildArgs() );
+        $cache = Cache::getCache( $args );
+        if( !$cache->id ) return;
+        $json = JSON::parse( $cache->data );
+        if( $json )
+        {
+            $s = JSON::stringify( $json, true );
+            $s = str_replace( " ", '&nbsp;', $s );
+            $s = str_replace( "\n", '<br />', $s );
+            echo $s;
+        }
+    }
+
     function testAction()
     {
         $conf = Config::get( 'Wechat' );
-        //print_r( $conf );
     }
 }
