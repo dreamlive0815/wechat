@@ -6,6 +6,8 @@ use EasyWeChat\Message\News;
 use Util\EnvironmentUtil as EU;
 use Config\Config;
 use Model\Reply;
+use Util\JsonUtil as JSON;
+use Util\MySQLi\MySQLiUtilPool as DB;
 
 class Text extends Base
 {
@@ -61,6 +63,32 @@ class Text extends Base
                 $cmd = sprintf( 'Ecard startdate=%s enddate=%s', date( 'Y-m-d', time() - 3600 * 24 * 30 ), date( 'Y-m-d' ) );
                 return self::handleText( $cmd );
 
+            case 'Getcache':
+                $type = self::getCmdArg( 'type' );
+                if( !$type && count( self::$cmdArgs ) > 1 )
+                {
+                    $keys = array_keys( self::$cmdArgs );
+                    $type = reset( $keys );
+                }
+                $type = ucfirst( $type );
+                if( !self::isQuery( $type ) ) return '';
+                $query = self::getQuery( self::renderQueryName( $type ) );
+                $args = array_merge( [ 'owner' => self::getOpenid(), 'type' => $query->getType() ] , $query->buildArgs() );
+                $cache = \Model\Cache::getCache( $args );
+                if( !$cache->id ) return '';
+                $json = JSON::parse( $cache->data );
+                if( $json ) return JSON::stringify( $json, true );
+                return '';
+
+            case 'Clearcache':
+                $q = DB::$default->getQuery( 'cache' );
+                $q->where( 'owner', self::getOpenid() );
+                if( $q->delete() ) return '缓存已清除';
+                return '无法清除缓存';
+
+            case 'Getopenid':
+                return self::getOpenid();
+
             case 'Setting':
                 $query = self::getQuery( 'Query' );
                 return $query->getRedirectSettingNews( null, '账号信息设置页面' );
@@ -105,10 +133,16 @@ class Text extends Base
         return in_array( $text, $list );
     }
 
-    static function runQuery( $text )
+    static function renderQueryName( $text )
     {
         if( $text == 'Coursebeta' ) $text = 'CourseBeta';
         if( $text == 'Scorebeta' ) $text = 'ScoreBeta';
+        return $text;
+    }
+
+    static function runQuery( $text )
+    {
+        $text = self::renderQueryName( $text );
         $query = self::getQuery( $text );
         if( self::getCmdArg( 'today' ) ) $query->today = true;
         if( self::getCmdArg( 'currentsemester' ) ) $query->currentSemester = true;
