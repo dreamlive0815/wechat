@@ -65,6 +65,11 @@ class Menu extends Config
             'sub_button' => [
                 [
                     'type' => 'click',
+                    'name' => '清除缓存',
+                    'key' => 'Clearcache'
+                ],
+                [
+                    'type' => 'click',
                     'name' => '设置',
                     'key' => 'Setting'
                 ],
