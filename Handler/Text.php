@@ -53,6 +53,13 @@ class Text extends Base
         if( self::isQuery( $base ) ) return self::runQuery( $base );
         switch( $base )
         {
+            case 'Ecardtoday':
+                $cmd = sprintf( 'Ecard startdate=%s enddate=%s', date( 'Y-m-d' ), date( 'Y-m-d' ) );
+                return self::handleText( $cmd );
+
+            case 'Ecardthismonth':
+                $cmd = sprintf( 'Ecard startdate=%s enddate=%s', date( 'Y-m-d', time() - 3600 * 24 * 30 ), date( 'Y-m-d' ) );
+                return self::handleText( $cmd );
 
             case 'Setting':
                 $query = self::getQuery( 'Query' );
