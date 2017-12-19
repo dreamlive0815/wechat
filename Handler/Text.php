@@ -72,7 +72,7 @@ class Text extends Base
                 }
                 $type = ucfirst( $type );
                 if( !self::isQuery( $type ) ) return '';
-                return sprintf( '%s/%s/api/User/getCache?type=%s', EU::getServerBaseURL(), Config::basename, $type );
+                return sprintf( '%s/%s/View/cache.php?type=%s', EU::getServerBaseURL(), Config::basename, $type );
 
             case 'Clearcache':
                 $q = DB::$default->getQuery( 'cache' );

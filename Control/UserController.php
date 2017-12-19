@@ -39,19 +39,17 @@ class UserController extends Controller
         $openid = $this->getOpenid();
         $type = CU::getR( 'type' );
         $type = ucfirst( strtolower( $type ) );
-        if( !Text::isQuery( $type ) ) return;
+        if( !Text::isQuery( $type ) ) return $this->output( 10001, '不存在指定类型的缓存' );
         $message = new \stdClass(); $message->FromUserName = $openid; Text::$message = $message;
         $query = Text::getQuery( Text::renderQueryName( $type ) );
         $args = array_merge( [ 'owner' => $openid, 'type' => $query->getType() ], $query->buildArgs() );
         $cache = Cache::getCache( $args );
-        if( !$cache->id ) return;
+        if( !$cache->id ) return $this->output( 10001, '缓存不存在' );
         $json = JSON::parse( $cache->data );
         if( $json )
         {
             $s = JSON::stringify( $json, true );
-            $s = str_replace( " ", '&nbsp;', $s );
-            $s = str_replace( "\n", '<br />', $s );
-            echo $s;
+            return $this->output( 0, '', $s );
         }
     }
 
