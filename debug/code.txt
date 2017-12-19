@@ -38,7 +38,7 @@ CREATE TABLE `easywechat`.`cache` (
 
 CREATE TABLE `easywechat`.`reply` ( 
     `id` INT NOT NULL AUTO_INCREMENT,
-    `key` VARCHAR(32),
+    `keyword` VARCHAR(32),
     `type` VARCHAR(32),
     `data` TEXT,
     PRIMARY KEY (`id`), 

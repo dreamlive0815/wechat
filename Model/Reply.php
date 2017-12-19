@@ -6,10 +6,10 @@ class Reply extends Model
 {
     static function wrapArgs( $args )
     {
-        if( !is_array( $args ) ) $args = [ 'key' => strval( $args ) ];
-        $args = array_merge( [ 'key' => '' ], $args );
+        if( !is_array( $args ) ) $args = [ 'keyword' => strval( $args ) ];
+        $args = array_merge( [ 'keyword' => '' ], $args );
         $realArgs = [
-            'key' => $args['key'],
+            'keyword' => $args['keyword'],
         ];
         return $realArgs;
     }
@@ -19,7 +19,7 @@ class Reply extends Model
         return self::getInstance( self::wrapArgs( $args ) );
     }
 
-    static function updateReply( $args )
+    static function updateReply( $args, array $set )
     {
         return self::updateInstance( self::wrapArgs( $args ), $set );
     }

@@ -5,9 +5,12 @@ namespace Handler;
 use EasyWeChat\Message\News;
 use Util\EnvironmentUtil as EU;
 use Config\Config;
+use Model\Reply;
 
 class Text extends Base
 {
+    static $callTimes = 0;
+
     static function handle()
     {
         $text = self::$message->Content;
@@ -60,13 +63,33 @@ class Text extends Base
                 return $query->getErrorImageURL();
                 
         }
+
+        ++self::$callTimes;
+        if( self::$callTimes > 3 ) throw new \Exception( '递归调用次数过多' );
+        $reply = Reply::getReply( $base );
+        if( $reply->id )
+        {
+            switch( $reply->type )
+            {
+                case 'text':
+                    return $reply->data;
+
+                case 'news':
+                    $newsArray = unserialize( $reply->data );
+                    return $newsArray;
+                
+                case 'cmd':
+                    return self::handleText( $reply->data );
+            }
+        }
+
     }
 
     static function isQuery( $text )
     {
         $list = [
             'Course', 'Coursebeta',
-            'Score', //'Scorebeta',
+            'Score', 'Scorebeta',
         ];
         return in_array( $text, $list );
     }

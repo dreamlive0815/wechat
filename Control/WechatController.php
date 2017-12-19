@@ -3,7 +3,9 @@
 namespace Control;
 
 use Model\User;
+use Model\Reply;
 use Config\Config;
+use EasyWeChat\Message\News;
 
 class WechatController extends Controller
 {
@@ -50,6 +52,21 @@ class WechatController extends Controller
 
         $menu = $this->menu;
         $menu->destroy();
+        return $this->output();
+    }
+
+    function addNewsReplyAction()
+    {
+        $key = 'Touhou';
+        $newsArray = [
+            new News( [ 
+                'title' => '东方', 
+            ] ),
+            new News( [
+                'title' => '东方Project',
+            ] )
+        ];
+        Reply::updateReply( $key, [ 'type' => 'news', 'data' => addslashes( serialize( $newsArray ) ) ] );
         return $this->output();
     }
 }
