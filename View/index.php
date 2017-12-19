@@ -1,5 +1,6 @@
 <?php
 
+die( 0 );
 $useDB = true;
 
 require( '../head.php' );
