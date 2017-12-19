@@ -77,6 +77,7 @@ class Text extends Base
         if( $text == 'Scorebeta' ) $text = 'ScoreBeta';
         $query = self::getQuery( $text );
         if( self::getCmdArg( 'today' ) ) $query->today = true;
+        if( self::getCmdArg( 'currentsemester' ) ) $query->currentSemester = true;
         $year = self::getCmdArg( 'year' );
         $semester = self::getCmdArg( 'semester' );
         if( preg_match( '/\d{4}-\d{4}/', $year ) && preg_match( '/\d/', $semester ) )

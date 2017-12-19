@@ -4,6 +4,9 @@ namespace Handler\Query;
 
 class EDU extends Query
 {
+    static $thisYear = '2017-2018';
+    static $thisSemester = '1';
+
     public $year;
     public $semester;
 

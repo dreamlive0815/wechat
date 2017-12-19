@@ -35,3 +35,12 @@ CREATE TABLE `easywechat`.`cache` (
     `data` TEXT ,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `easywechat`.`reply` ( 
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `key` VARCHAR(32),
+    `type` VARCHAR(32),
+    `data` TEXT,
+    PRIMARY KEY (`id`), 
+    UNIQUE (`key`)
+) ENGINE = InnoDB;
