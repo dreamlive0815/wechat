@@ -98,6 +98,7 @@ class Text extends Base
             'Course', 'Coursebeta',
             'Score', 'Scorebeta',
             'Ecard',
+            'Exam',
         ];
         return in_array( $text, $list );
     }
