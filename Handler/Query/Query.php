@@ -178,4 +178,36 @@ class Query
             'url' => $url,
         ] );
     }
+
+    static function getWeekday( $timestamp = null )
+    {
+        if( !$timestamp ) $timestamp = time();
+        $w = intval( date( 'w', $timestamp ) );
+        if( $w == 0 ) $w = 7;
+        return $w;
+    }
+
+    static function transWeekday( $number )
+    {
+        $table = [
+            '一' => 1,
+            '二' => 2,
+            '三' => 3,
+            '四' => 4,
+            '五' => 5,
+            '六' => 6,
+            '日' => 7,
+        ];
+        if( isset( $table[$number] ) ) return $table[$number];
+        return array_search( $number, $table );
+    }
+
+    static function getWeekNumber( $now = null )
+    {
+        if( !$now ) $now = time();
+        $s = strtotime( '2017-9-11 0:00:00' );//第一周第一天
+        $wi = floor( ( $now - $s ) / 604800 ) + 1;
+        if( $wi < 1 ) $wi = 1;
+        return (int) $wi;
+    }
 }

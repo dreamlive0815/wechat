@@ -10,6 +10,8 @@ use Util\Session\SessionUtil as SU;
 use Control\UserController as US;
 use Config\Config;
 
+$type = CU::getR( 'type' );
+
 US::startSession();
 
 $openid = SU::getval( 'openid' );
@@ -18,12 +20,11 @@ if( !$openid )
     require( '../wechat_head.php' );
     $oauth = $app->oauth;
     
-    $_SESSION['target_url'] = 'View/cache.php';
+    $_SESSION['target_url'] = 'View/cache.php?type=' . $type;
     $oauth->redirect()->send();
     die( 0 );
 }
 
-$type = CU::getR( 'type' );
 VU::head( "缓存[{$type}]" );
 ?>
     <textarea id="txt" class="form-control" style="width: 100%;" rows="40">

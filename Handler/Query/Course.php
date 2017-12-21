@@ -13,7 +13,7 @@ class Course extends EDU
     function renderData( $data )
     {
         $newsArray = [];
-        $head = sprintf( "%s 学年第 %s 学期", $data['year'], $data['semester'] );
+        $head = sprintf( "%s 学年第 %s 学期 %s 周", $data['year'], $data['semester'], self::getWeekNumber() );
         $head .= sprintf( "\n%s(%s)", $data['sid'], $data['name'] );
         $head .= $this->getStatusText();
         $newsArray[] = $this->getNews( [ 'title' => $head ] );
@@ -43,28 +43,5 @@ class Course extends EDU
         }
         
         return $newsArray;
-    }
-
-    static function getWeekday( $timestamp = null )
-    {
-        if( !$timestamp ) $timestamp = time();
-        $w = intval( date( 'w', $timestamp ) );
-        if( $w == 0 ) $w = 7;
-        return $w;
-    }
-
-    static function transWeekday( $number )
-    {
-        $table = [
-            '一' => 1,
-            '二' => 2,
-            '三' => 3,
-            '四' => 4,
-            '五' => 5,
-            '六' => 6,
-            '日' => 7,
-        ];
-        if( isset( $table[$number] ) ) return $table[$number];
-        return array_search( $number, $table );
     }
 }
