@@ -81,7 +81,7 @@ class Text extends Base
 
             case 'Error':
                 $query = self::getQuery( 'Query' );
-                return $query->getErrorImageURL();
+                return new News( [ 'image' => $query->getErrorImageURL() ] );
                 
         }
 

@@ -155,7 +155,7 @@ class Query
 
     function getErrorImageURL()
     {
-        $imgCnt = 5;
+        $imgCnt = 8;
         $index = mt_rand( 0, $imgCnt - 1 );
         $url = EU::getServerBaseURL() . sprintf( '/%s/Resource/Image/Fail/%s.jpg', Config::basename, $index );
         return $url;
