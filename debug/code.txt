@@ -42,5 +42,13 @@ CREATE TABLE `easywechat`.`reply` (
     `type` VARCHAR(32),
     `data` TEXT,
     PRIMARY KEY (`id`), 
-    UNIQUE (`key`)
+    UNIQUE (`keyword`)
+) ENGINE = InnoDB;
+
+CREATE TABLE `easywechat`.`setting` ( 
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `openid` VARCHAR(32),
+    `type` VARCHAR(32),
+    `data` TEXT,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;

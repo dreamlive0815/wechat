@@ -36,6 +36,7 @@ class Text extends Base
                 $name = preg_replace( '/\..+/', '', $name );
                 if( $name == 'Plugin' ) continue;
                 $class = "\\Handler\\Plugin\\{$name}"; $plugin = new $class();
+                $plugin->openid = self::getOpenid();
                 $return = $plugin->run( $text );
                 if( $plugin->handled ) return $return;
             }
