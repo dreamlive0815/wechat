@@ -77,7 +77,7 @@ class Cloud extends Tool
         $postRaw = self::encryptSongArgs( $args );
         $response = $curl->POST( $postRaw );
         $json = json_decode( $response, true );
-        if( empty( $json ) ) throw new \Exception( '数据出错' );
+        if( empty( $json ) ) throw new \Exception( 'JSON parse error' );
         return $json;
     }
 
@@ -139,6 +139,36 @@ class Cloud extends Tool
             'detail_info' => $detail_info,
             'url_info' => $url_info,
         ];
+    }
+
+    static function getUserPlayRecordArgs( $id )
+    {
+        return [
+            'limit' => 1000,
+            'offset' => 0,
+            'total' => true,
+            'type' => -1,
+            'uid' => strval( $id ),
+        ];
+    }
+
+    static function getUserPlayRecordInfo( $id )
+    {
+        $json = self::callAPI( '/weapi/v1/play/record?csrf_token=', self::getUserPlayRecordArgs( $id ) );
+        if( $json['code'] != 200 ) throw new \Exception( $json['msg'] );
+        return $json;
+    }
+
+    static function getUserWeekPlayRecordInfo( $id )
+    {
+        $info = self::getUserPlayRecordInfo( $id );
+        return $info['weekData'];
+    }
+
+    static function getUserAllPlayRecordInfo( $id )
+    {
+        $info = self::getUserPlayRecordInfo( $id );
+        return $info['allData'];
     }
 
     static function getRandString( $length )

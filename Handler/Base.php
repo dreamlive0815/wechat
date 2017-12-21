@@ -9,6 +9,7 @@ class Base
 {
     static $message;
     static $cmdArgs = [];
+    static $usePlugin = true;
 
     static function getCmdArg( $key )
     {

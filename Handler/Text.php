@@ -4,10 +4,12 @@ namespace Handler;
 
 use EasyWeChat\Message\News;
 use Util\EnvironmentUtil as EU;
-use Config\Config;
-use Model\Reply;
 use Util\JsonUtil as JSON;
 use Util\MySQLi\MySQLiUtilPool as DB;
+use Util\FileSystem\DirUtil as DIR;
+use Config\Config;
+use Model\Reply;
+
 
 class Text extends Base
 {
@@ -24,30 +26,19 @@ class Text extends Base
     {
         self::$cmdArgs = self::parseCmdArgs( $text );
 
-        $class = '\Tool\Cloud'; $tool = new $class();
-        if( $tool->hasSongURL( $text ) )
+        if( self::$usePlugin )
         {
-            $id = $tool->getSongID( $text );
-            $info = $tool->getSongInfo( $id );
-            $url = sprintf( '%s/%s/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), Config::basename, $id );
-            return new News( [
-                'title' => $info['name'],
-                'description' => '点击下载',
-                'url' => $url,
-            ] );
-        }
-
-        $class = '\Tool\CNKI'; $tool = new $class();
-        if( $tool->hasArticleURL( $text ) )
-        {
-            $url = $tool->getArticleURL( $text );
-            $info = $tool->getArticleInfo( $url );
-            $downloadURL = $tool->getArticleDownloadURL( $info );
-            return new News( [
-                'title' => $info['filename'],
-                'description' => '点击下载',
-                'url' => $downloadURL,
-            ] );
+            $dir = new DIR( __DIR__ . '/Plugin'  );
+            $files = $dir->getFileChildren();
+            foreach( $files as $file )
+            {
+                $name = $file['name'];
+                $name = preg_replace( '/\..+/', '', $name );
+                if( $name == 'Plugin' ) continue;
+                $class = "\\Handler\\Plugin\\{$name}"; $plugin = new $class();
+                $return = $plugin->run( $text );
+                if( $plugin->handled ) return $return;
+            }
         }
         
         $base = strtolower( self::getCmdArg( 'base' ) );
