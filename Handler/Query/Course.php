@@ -13,7 +13,8 @@ class Course extends EDU
     function renderData( $data )
     {
         $newsArray = [];
-        $head = sprintf( "%s 学年第 %s 学期 %s 周", $data['year'], $data['semester'], self::getWeekNumber() );
+        $head = sprintf( "%s 学年第 %s 学期", $data['year'], $data['semester'] );
+        if( $data['year'] == self::$thisYear && $data['semester'] == self::$thisSemester ) $head .= sprintf( ' %s 周', self::getWeekNumber() );
         $head .= sprintf( "\n%s(%s)", $data['sid'], $data['name'] );
         $head .= $this->getStatusText();
         $newsArray[] = $this->getNews( [ 'title' => $head ] );
