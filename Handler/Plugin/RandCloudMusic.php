@@ -27,6 +27,7 @@ class RandCloudMusic extends Plugin
                 'title' => $song['name'],
                 'description' => '点击下载',
                 'url' => $url,
+                'image' => $song['al']['picUrl'],
             ] );
         }
     }

@@ -26,6 +26,7 @@ class Cloud extends Plugin
                 'title' => $info['name'],
                 'description' => '点击下载',
                 'url' => $url,
+                'image' => $info['picurl'],
             ] );
         }
     }

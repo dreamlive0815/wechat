@@ -135,6 +135,7 @@ class Cloud extends Tool
         return [
             'name' => $detail_info['name'],
             'url' => $url_info['url'],
+            'picurl' => $detail_info['al']['picUrl'],
 
             'detail_info' => $detail_info,
             'url_info' => $url_info,

@@ -28,7 +28,7 @@ class Ecard extends Query
         $head .= $this->getStatusText();
         $newsArray[] = $this->getNews( [ 'title' => $head ] );
 
-        $s = sprintf( '账户余额: %s', $data['balance'] );
+        $s = sprintf( '账户余额: %s元', $data['balance'] );
         $newsArray[] = $this->getNews( [ 'title' => $s ] );
 
         $s = ''; $sum = 0;
