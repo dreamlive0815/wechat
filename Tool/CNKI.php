@@ -14,12 +14,12 @@ class CNKI extends Tool
 
     static function hasArticleURL( $text )
     {
-        return (boolean) preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx/i', $text );
+        return (boolean) preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\//i', $text );
     }
 
     static function getArticleURL( $text )
     {
-        if( !preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\/detail\.aspx[^\s\x7f-\xff]*/i', $text, $match ) ) return null;
+        if( !preg_match( '/http:\/\/\w+\.cnki\.net\/KCMS\/detail\/[^\s\x7f-\xff]*/i', $text, $match ) ) return null;
         return $match[0];
     }
 

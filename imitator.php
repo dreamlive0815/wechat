@@ -8,7 +8,7 @@ use Util\CommonUtil as CU;
 $url = 'http://localhost/wechat/index.php';
 
 $text = CU::getR( 'text' );
-if( !$text ) $text = 'http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CMFD&dbname=CMFD201601&filename=1015646736.nh&uid=WEEvREcwSlJHSldRa1FhdXNXYXFuU20zYnFKeERTZGhaV2tWdkZoa2ZXUT0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4ggI8Fm4gTkoUKaID8j8gFw!!&v=MzE5MjhHTmJQcVpFYlBJUjhlWDFMdXhZUzdEaDFUM3FUcldNMUZyQ1VSTDJlWmVkb0Z5dmhVTC9QVkYyNkc3Vzg=';
+if( !$text ) $text = 'http://kns.cnki.net/KCMS/detail/10.1330.G2.20171205.1301.090.html?uid=WEEvREcwSlJHSldRa1Fhb09jMjVzMzFsT2I1Skh2UStLTldhYlBsU1FVMD0=$9A4hF_YAuvQ5obgVAqNKPCYcEjKensW4ggI8Fm4gTkoUKaID8j8gFw!!&v=MzA2MTJZdzlNem1SbjZqNTdUM2ZscVdNMENMTDdSN3FlWU9kdEZDdm1VcjdJSkZZPVBTRGZaTEc0SDliTnJZOUFaT29H';
 
 $message = "<xml>
 <ToUserName><![CDATA[gh_3e5937f3358d]]></ToUserName>
