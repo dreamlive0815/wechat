@@ -48,7 +48,7 @@ class Google
         return $json[2];
     }
 
-    static function getTranslatorVoice( $q, $lan, $TK )
+    static function getTranslatorVoiceLink( $q, $lan, $TK )
     {
         $args = [
             'ie' => 'UTF-8',
@@ -62,6 +62,12 @@ class Google
             'prev' => 'input',
         ];
         $url = sprintf( '%s/translate_tts?%s', self::$apiBase, http_build_query( $args ) );
+        return $url;
+    }
+
+    static function getTranslatorVoice( $q, $lan, $TK )
+    {
+        $url = self::getTranslatorVoiceLink( $q, $lan, $TK );
         $http = new HTTP( $url );
         $html = $http->GET();
         return $html;
