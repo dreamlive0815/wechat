@@ -24,7 +24,7 @@ class Google
         $args = [
             'client' => 't',
             'sl' => 'auto',
-            'tl' => 'en',
+            'tl' => 'zh-CN',
             'hl' => 'zh-CN',
             'dt' => 'at', 'dt' => 'bd', 'dt' => 'ex', 'dt' => 'ld', 'dt' => 'md', 'dt' => 'qca', 'dt' => 'rw', 'dt' => 'rm', 'dt' => 'ss', 'dt' => 't',
             'ie' => 'UTF-8', 'oe' => 'UTF-8',

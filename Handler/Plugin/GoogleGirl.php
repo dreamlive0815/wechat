@@ -4,6 +4,7 @@ namespace Handler\Plugin;
 
 use Tool\Google;
 use EasyWeChat\Message\Voice;
+use EasyWeChat\Message\News;
 use Util\FileSystem\DirUtil as DIR;
 
 class GoogleGirl extends Plugin
@@ -24,8 +25,11 @@ class GoogleGirl extends Plugin
             {
                 $TKK = Google::getTranslatorTKK();
                 $TK = Google::getTranslatorTK( $text, $TKK );
-                $lan = Google::getTranslatorLanguage( $text, $TK );
-                return Google::getTranslatorVoiceLink( $text, $lan, $TK );
+                $json = Google::translate_tts( $text, $TK );
+                $translation = $json[0][0][0];
+                $lan = $json[2];
+                $url = Google::getTranslatorVoiceLink( $text, $lan, $TK );
+                return new News( [ 'title' => $text, 'description' => sprintf( "%s\n\n%s", $translation, '点击下载' ), 'url' => $url ] );
             }
             $voiceraw = Google::getTranslatorVoiceByText( $text );
             $filepath = $dir->createFile( $filename, $voiceraw );
