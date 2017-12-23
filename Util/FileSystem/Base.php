@@ -34,4 +34,9 @@ class Base
     {
         $this->items[$key] = $val;
     }
+
+    function isNameLegal( $name )
+    {
+        return !preg_match( '/["<>:\+\/\*\?\|\\\]/', $name );
+    }
 }

@@ -3,11 +3,15 @@
 namespace Tool;
 
 use Util\CurlUtil as HTTP;
+use Util\JsonUtil as JSON;
 
 class Google
 {
     static $apiBase = 'https://translate.google.cn';
     static $encoding = 'UTF-8';
+
+    static $TKK;
+    static $TK;
 
     static function getTranslatorMainPage()
     {
@@ -15,16 +19,72 @@ class Google
         return $http->GET();
     }
 
-    static function getTranslatorTTK( $html = null )
+    static function translate_tts( $q, $TK )
+    {
+        $args = [
+            'client' => 't',
+            'sl' => 'auto',
+            'tl' => 'en',
+            'hl' => 'zh-CN',
+            'dt' => 'at', 'dt' => 'bd', 'dt' => 'ex', 'dt' => 'ld', 'dt' => 'md', 'dt' => 'qca', 'dt' => 'rw', 'dt' => 'rm', 'dt' => 'ss', 'dt' => 't',
+            'ie' => 'UTF-8', 'oe' => 'UTF-8',
+            'source' => 'btn',
+            'ssel' => '3', 'tsel' => '0', 'kc' => '0',
+            'tk' => $TK,
+            'q' => $q,
+        ];
+        $url = sprintf( '%s/translate_a/single?%s', self::$apiBase, http_build_query( $args ) );
+        $http = new HTTP( $url );
+        $html = $http->GET();
+        $json = JSON::parse( $html );
+        if( !$json ) throw new \Exception( '翻译失败' );
+        return $json;
+    }
+
+    static function getTranslatorLanguage( $q, $TK )
+    {
+        $json = self::translate_tts( $q, $TK );
+        if( !isset( $json[2] ) ) throw new \Exception( '无法检测语言' );
+        return $json[2];
+    }
+
+    static function getTranslatorVoice( $q, $lan, $TK )
+    {
+        $args = [
+            'ie' => 'UTF-8',
+            'q' => $q,
+            'tl' => $lan,
+            'total' => '1',
+            'idx' => '0',
+            'textlen' => mb_strlen( $q, self::$encoding ),
+            'tk' => $TK,
+            'client' => 't',
+            'prev' => 'input',
+        ];
+        $url = sprintf( '%s/translate_tts?%s', self::$apiBase, http_build_query( $args ) );
+        $http = new HTTP( $url );
+        $html = $http->GET();
+        return $html;
+    }
+
+    static function getTranslatorVoiceByText( $q )
+    {
+        $TKK = self::getTranslatorTKK();
+        $TK = self::getTranslatorTK( $q, $TKK );
+        $lan = self::getTranslatorLanguage( $q, $TK );
+        return self::getTranslatorVoice( $q, $lan, $TK );
+    }
+
+    static function getTranslatorTKK( $html = null )
     {
         if( !$html ) $html = self::getTranslatorMainPage();
         $reg = '/TKK=.+?a\\\x3d(\d+);.+?b\\\x3d(-?\d+);return\s+(\d+).+?;/';
-        if( !preg_match( $reg, $html, $match ) ) throw new \Exception( '无法获取TTK变量' );
+        if( !preg_match( $reg, $html, $match ) ) throw new \Exception( '无法获取TKK变量' );
         $sum = intval( $match[1] ) + intval( $match[2] );
         $s = $match[3] . '.' . $sum;
+        self::$TKK = $s;
         return $s;
     }
-
 
     static function getTranslatorTK( $a, $TTK )
     {
@@ -34,22 +94,63 @@ class Google
         for( $f = 0; $f < $alen; ++$f )
         {
             $c = self::charCodeAt( $a, $f );
-            //128 > $c ? $g[$d++] = $c : ( 2048 > $c ? $g[$d++] = $c >> 6 | 192 : ( 55296 == ( $c & 64512 ) && $f + 1 < $alen && 56320 == ( self::charCodeAt( $a, $f + 1 ) & 64512 ) ? ( $c == 65536 + ( ( $c & 1023 ) << 10 ) + ( self::charCodeAt( ++$f ) & 1023 ), $g[$d++] = $c >> 18 | 240, $g[$d++] = $c >> 12 & 63 | 128 ) : $g[$d++] = $c >> 12 | 224, $g[$d++] = $c >> 6 & 63 | 128, $g[$d++] = $c & 63 | 128 );
+
+            if( 128 > $c )
+                $g[$d++] = $c;
+            else
+            {
+                if( 2048 > $c )
+                    $g[$d++] = $c >> 6 | 192;
+                else
+                {
+                    if( 55296 == ( $c & 64512 ) && $f + 1 < $alen && 56320 == ( self::charCodeAt( $a, $f + 1 ) & 64512 ) )
+                    {
+                        $c = 65536 + ( ( $c & 1023 ) << 10 ) + ( self::charCodeAt( $a, ++$f ) & 1023 );
+                        $g[$d++] = $c >> 18 | 240;
+                        $g[$d++] = $c >> 12 & 63 | 128;
+                    }
+                    else
+                    {
+                        $g[$d++] = $c >> 12 | 224;
+                        $g[$d++] = $c >> 6 & 63 | 128;
+                        $g[$d++] = $c & 63 | 128;
+                    }
+                }
+            }     
         }
+        $a = $h; $glen = count( $g );
+        for( $d = 0; $d < $glen; ++$d )
+        {
+            $a += $g[$d];
+            $a = self::translatorFuncB( $a, '+-a^+6' );
+        }
+        $a = self::translatorFuncB( $a, '+-3^+b+-f' );
+        $a = self::parseInt32( $a ^ intval( $e[1] ) );
+        if( 0 > $a )
+        {
+            $a = self::parseInt32( $a & 2147483647 );
+            $a = $a + 2147483648;
+        }
+
+        $a %= 1000000;
+        $ret = $a . '.' . self::parseInt32( $a ^ $h );
+        self::$TK = $ret;
+        return $ret;
         /*
-        for (var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0; f < a.length; f++) {
-            var c = a.charCodeAt(f);
-            128 > c ? g[d++] = c : (2048 > c ? g[d++] = c >> 6 | 192 : (55296 == (c & 64512) && f + 1 < a.length && 56320 == (a.charCodeAt(f + 1) & 64512) ? (c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023), g[d++] = c >> 18 | 240, g[d++] = c >> 12 & 63 | 128) : g[d++] = c >> 12 | 224, g[d++] = c >> 6 & 63 | 128), g[d++] = c & 63 | 128)
-        }
-        a = h;
-        for (d = 0; d < g.length; d++) a += g[d], a = b(a, "+-a^+6");
-        a = b(a, "+-3^+b+-f");
-        a ^= Number(e[1]) || 0;
-        0 > a && (a = (a & 2147483647) + 2147483648);
-        a %= 1E6;
-        return a.toString() + "." + (a ^ h)
+var tk =  function (a,TKK) {
+    for (var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0; f < a.length; f++) {
+        var c = a.charCodeAt(f);
+        128 > c ? g[d++] = c : (2048 > c ? g[d++] = c >> 6 | 192 : (55296 == (c & 64512) && f + 1 < a.length && 56320 == (a.charCodeAt(f + 1) & 64512) ? (c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023), g[d++] = c >> 18 | 240, g[d++] = c >> 12 & 63 | 128) : g[d++] = c >> 12 | 224, g[d++] = c >> 6 & 63 | 128), g[d++] = c & 63 | 128)
+    }
+    a = h;
+    for (d = 0; d < g.length; d++) a += g[d], a = b(a, "+-a^+6");
+    a = b(a, "+-3^+b+-f");
+    a ^= Number(e[1]) || 0;
+    0 > a && (a = (a & 2147483647) + 2147483648);
+    a %= 1E6;
+    return a.toString() + "." + (a ^ h)
+}
         */
-        
     }
 
     static function translatorFuncB( $a, $b )
@@ -61,7 +162,7 @@ class Google
             $c = self::charAt( $b, $d + 2 );
             $c = 'a' <= $c ? self::charCodeAt( $c, 0 ) - 87 : intval( $c );
             $c = '+' == self::charAt( $b, $d + 1 ) ? self::shr32( $a, $c, false ) : self::shl32( $a, $c );
-            $a = '+' == self::charAt( $b, $d ) ? self::parseInt32( $a + $c ) & 4294967295 : $a ^ $c;
+            $a = '+' == self::charAt( $b, $d ) ? ( $a + $c ) & 4294967295 : $a ^ $c;
             $a = self::parseInt32( $a ); 
         }
         return $a;

@@ -30,4 +30,13 @@ class DirUtil extends Base
         $children = $this->getChildren();
         return $children['file'];
     }
+
+    function createFile( $name, $content, $overwrite = true )
+    {
+        if( !is_writable( $this->path ) ) throw new \Exception( '文件夹不可写,无法创建文件' );
+        if( !$this->isNameLegal( $name ) ) throw new \Exception( '文件名不合法,无法创建文件' );
+        $fullPath = $this->path . '/' . $name;
+        if( !$overwrite && is_file( $fullPath ) ) throw new \Exception( '同名文件已存在,无法创建文件' );
+        return file_put_contents( $fullPath, $content );
+    }
 }
