@@ -23,7 +23,7 @@ if( !$openid )
     require( '../wechat_head.php' );
     $oauth = $app->oauth;
     
-    $_SESSION['target_url'] = 'View/cache.php?type=' . $type;
+    $_SESSION['target_url'] = 'View/queryview.php?type=' . $type;
     $oauth->redirect()->send();
     die( 0 );
 }
