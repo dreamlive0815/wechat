@@ -26,7 +26,7 @@ class Cloud extends Tool
         if( !self::hasSongURL( $text ) ) return null;
         if( !preg_match( '/https?:\/\/[^\s\x7f-\xff]+/', $text, $match ) ) return null;
         $url = $match[0];
-        if( preg_match( '/song\/(\d+)\//', $url, $match ) ) return intval( $match[1] );
+        if( preg_match( '/song\/(\d+)/', $url, $match ) ) return intval( $match[1] );
         $args = CommonUtil::getURLArgs( $url );
         return isset( $args['id'] ) ? intval( $args['id'] ) : null;
     }

@@ -39,7 +39,7 @@ class CNKI extends Tool
 
     static function getArticleDownloadURL( $info )
     {
-        $url = EU::getServerBaseURL() . sprintf( '/%s/View/download.CNKI.php?url=%s&filename=%s', Config::basename, base64_encode( $info['url'] ), $info['filename'] );
+        $url = EU::getServerBaseURL() . sprintf( '/%s/View/download.CNKI.php?url=%s&filename=%s', Config::basename, base64_encode( $info['url'] ), urlencode( $info['filename'] ) );
         //$url = sprintf( '%s?docurl=%s&filename=%s', self::$apiURL, urlencode( $info['docurl'] ), $info['filename'] );
         return $url;
     }

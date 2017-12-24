@@ -22,6 +22,7 @@ class Cloud extends Plugin
             $info = $tool->getSongInfo( $id );
             $url = sprintf( '%s/%s/View/download.Cloud.php?id=%s', EU::getServerBaseURL(), Config::basename, $id );
             $this->handled = true;
+            if( preg_match( '/http\S+\s+.*?link/', $text ) ) return $url;
             return $this->getNews( [
                 'title' => $info['name'],
                 'description' => '点击下载',

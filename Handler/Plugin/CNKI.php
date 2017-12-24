@@ -16,6 +16,7 @@ class CNKI extends Plugin
             $info = $tool->getArticleInfo( $url );
             $downloadURL = $tool->getArticleDownloadURL( $info );
             $this->handled = true;
+            if( preg_match( '/http\S+\s+link/', $text ) ) return $downloadURL;
             return $this->getNews( [
                 'title' => $info['filename'],
                 'description' => '点击下载',
