@@ -11,7 +11,7 @@ class Ecard extends Query
     function buildArgs()
     {
         $args = parent::buildArgs();
-        $args['passwd'] = $this->user->ecard_passwd;
+        $args['passwd'] = preg_replace( '/x/i', '0', $this->user->ecard_passwd );
         if( $this->startDate && $this->endDate )
         {
             $args['startdate'] = $this->startDate;
