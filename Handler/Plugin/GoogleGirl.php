@@ -11,7 +11,7 @@ class GoogleGirl extends Plugin
 {
     function run( $text )
     {
-        if( preg_match( '/(GoogleGirl|谷歌娘)\s*(\S+)(\s+link)?/i', $text, $match ) )
+        if( preg_match( '/(GoogleGirl|谷歌娘|GG)\s*(\S+)(\s+link)?/i', $text, $match ) )
         {
             $app = $GLOBALS['app'];
             $temporary = $app->material_temporary;
