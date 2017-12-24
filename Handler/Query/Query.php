@@ -130,6 +130,11 @@ class Query
     {
     }
 
+    function renderView( $data )
+    {
+        return [];
+    }
+
     function getType()
     {
         $class = static::class;
@@ -176,6 +181,19 @@ class Query
             'title' => $title,
             'description' => $description,
             'url' => $url,
+        ] );
+    }
+
+    function getViewURL()
+    {
+        return sprintf( '%s/%s/View/queryview.php?type=%s', EU::getServerBaseURL(), Config::basename, $this->getType() );
+    }
+
+    function getViewNews()
+    {
+        return $this->getNews( [
+            'title' => '点击这里以网页模式查看数据',
+            'url' => $this->getViewURL(),
         ] );
     }
 
