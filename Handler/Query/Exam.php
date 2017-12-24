@@ -21,6 +21,25 @@ class Exam extends EDU
         }
         $newsArray[] = $this->getNews( [ 'title' => $s ] );
 
+        $newsArray[] = $this->getViewNews();
+
         return $newsArray;
+    }
+
+    function renderView( $data )
+    {
+        $uls = [];
+        $head = sprintf( "姓名: %s", $data['name'] );
+        $head .= str_replace( "\n", '<br />', $this->getStatusText() );
+        $uls[] = [ 'args' => [], 'lis' => [ $head ] ];
+
+        $lis = [];
+        foreach( $data['exams'] as $exam )
+        {
+            $lis[] = sprintf( "%s<br />%s %s %s", $exam['datetime'], $exam['name'], $exam['address'], $exam['seatno'] );
+        }
+        $uls[] = [ 'args' => [], 'lis' => $lis ];
+
+        return $uls;
     }
 }

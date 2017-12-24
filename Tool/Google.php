@@ -84,7 +84,7 @@ class Google
     static function getTranslatorTKK( $html = null )
     {
         if( !$html ) $html = self::getTranslatorMainPage();
-        $reg = '/TKK=.+?a\\\x3d(\d+);.+?b\\\x3d(-?\d+);return\s+(\d+).+?;/';
+        $reg = '/TKK=.+?a\\\x3d(-?\d+);.+?b\\\x3d(-?\d+);return\s+(\d+).+?;/';
         if( !preg_match( $reg, $html, $match ) ) throw new \Exception( '无法获取TKK变量' );
         $sum = intval( $match[1] ) + intval( $match[2] );
         $s = $match[3] . '.' . $sum;
