@@ -66,7 +66,6 @@ class Ecard extends Query
         $uls[] = [ 'args' => [], 'lis' => $lis ];
         $s = sprintf( '时间段内总消费: %.2f元', $sum );
         $uls[] = [ 'args' => [], 'lis' => [ $s ] ];
-        //print_r( $data );
 
         return $uls;
     }

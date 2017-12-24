@@ -42,7 +42,7 @@ if( !$json ) throw new \Exception( '解析缓存数据时出错' );
 $query->fromCache = true; $query->cache = $cache;
 $view = $query->renderView( $json['result'] );
 
-VU::head( "查询[{$type}]" );
+VU::head( sprintf( '查询[%s]', CU::getR( 'type' ) ) );
 ?>
 <br />
 <?php
