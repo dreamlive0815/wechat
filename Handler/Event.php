@@ -3,6 +3,7 @@
 namespace Handler;
 
 use Model\User;
+use EasyWeChat\Message\News;
 
 class Event extends Base
 {
@@ -14,7 +15,8 @@ class Event extends Base
         {
             case 'subscribe':
                 self::subscribe( 1 );
-                return '欢迎关注';
+                $query = self::getQuery( 'Query' );
+                return $query->getRedirectSettingNews( null, '欢迎关注', '你可以点击这里设置账号信息后使用相应的查询功能' );
 
             case 'unsubscribe':
                 self::subscribe( 0 );

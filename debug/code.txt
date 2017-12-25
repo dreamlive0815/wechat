@@ -52,3 +52,11 @@ CREATE TABLE `easywechat`.`setting` (
     `data` TEXT,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `easywechat`.`log` ( 
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `openid` VARCHAR(32),
+    `update_time` DATETIME,
+    `data` TEXT,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;

@@ -9,6 +9,7 @@ use Util\MySQLi\MySQLiUtilPool as DB;
 use Util\FileSystem\DirUtil as DIR;
 use Config\Config;
 use Model\Reply;
+use Model\Log;
 
 
 class Text extends Base
@@ -18,6 +19,8 @@ class Text extends Base
     static function handle()
     {
         $text = self::$message->Content;
+
+        Log::updateLog( [ 'openid' => self::getOpenid() ], [ 'data' => $text ] );
 
         return self::handleText( $text );
     }
