@@ -13,7 +13,7 @@ use Config\Config;
 
 class Query
 {
-    static $apiURL = 'http://m.zstu.edu.cn/capturer/index.php';
+    static $apiURL = 'http://mcrd.zstu.edu.cn/capturer/index.php';
     static $lifeTime = 3600;
     static $timeout = 4000;
 

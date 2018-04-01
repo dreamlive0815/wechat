@@ -9,7 +9,7 @@ use Config\Config;
 
 class CNKI extends Tool
 {   
-    static $apiURL = 'http://m.zstu.edu.cn/capturer/CNKI';
+    static $apiURL = 'http://mcrd.zstu.edu.cn/capturer/CNKI';
     //static $apiURL = 'http://localhost/capturer/CNKI';
 
     static function hasArticleURL( $text )
